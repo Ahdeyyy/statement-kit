@@ -134,17 +134,25 @@ describe('public parser API', () => {
     expect(parse('gtbank', path, { timeoutMs: 1 }).error?.code).toBe('timeout');
   });
 
-  test('built package works under Node without Bun', () => {
-    const code = `import { parse, parseAsync, Statement } from 'statement-kit';
-      const a = parse('gtbank', process.argv[1]);
-      const b = await parseAsync('gtbank', process.argv[1]);
-      if (a.error || b.error || !(a.data instanceof Statement) || a.data.transactions.length !== 2) process.exit(1);
-      console.log(a.data.toCSV());`;
-    const run = spawnSync('node', ['--input-type=module', '-e', code, path], { encoding: 'utf8', windowsHide: true });
-    expect(run.stderr).toBe('');
-    expect(run.status).toBe(0);
-    expect(run.stdout).toContain('POS PURCHASE');
-  });
+  for (const format of ['module', 'commonjs'] as const) {
+    test(`built ${format} package works under Node without Bun`, () => {
+      const load = format === 'module'
+        ? `import { parse, parseAsync, Statement } from 'statement-kit';`
+        : `const { parse, parseAsync, Statement } = require('statement-kit');`;
+      const code = `${load}
+        (async () => {
+          const a = parse('gtbank', process.argv[1]);
+          const b = await parseAsync('gtbank', process.argv[1]);
+          if (a.error || b.error || !(a.data instanceof Statement) || !(b.data instanceof Statement) ||
+              a.data.transactions.length !== 2 || JSON.stringify(a.data) !== JSON.stringify(b.data)) process.exit(1);
+          console.log(a.data.toCSV());
+        })().catch((error) => { console.error(error); process.exitCode = 1; });`;
+      const run = spawnSync('node', [`--input-type=${format}`, '-e', code, path], { encoding: 'utf8', windowsHide: true });
+      expect(run.stderr).toBe('');
+      expect(run.status).toBe(0);
+      expect(run.stdout).toContain('POS PURCHASE');
+    });
+  }
 
   test('exports the supported institution list', () => {
     expect(supportedBanks.map((bank) => bank.id)).toEqual(['gtbank', 'zenith', 'uba', 'cowrywise']);

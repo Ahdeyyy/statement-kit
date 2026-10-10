@@ -3,12 +3,19 @@
   "version": "0.1.0",
   "description": "Parse Nigerian bank statement PDFs into transactions, account information, CSV and TSV.",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
@@ -16,19 +23,24 @@
   "files": ["dist", "README.md", "LICENSE"],
   "sideEffects": false,
   "license": "MIT",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "keywords": ["nigeria", "bank-statement", "pdf", "gtbank", "zenith", "uba", "cowrywise", "csv", "parser"],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsup",
     "typecheck": "tsc --noEmit",
     "test": "bun run build && bun test tests",
     "fixtures:generate": "bun scripts/generate-pdf-fixtures.ts",
     "prepack": "npm run build"
   },
-  "dependencies": { "unpdf": "^1.8.1" },
+  "dependencies": {
+    "unpdf": "^1.8.1"
+  },
   "devDependencies": {
     "@types/bun": "^1.4.2",
     "@types/node": "^22.0.0",
+    "tsup": "^8.5.1",
     "typescript": "^6.0.2"
   }
 }

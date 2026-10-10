@@ -6,7 +6,7 @@ Parsing runs locally using [unpdf](https://github.com/unjs/unpdf) and PDF.js; st
 
 ## Installation
 
-Requires **Node.js 22 or newer**, or **Bun**. This package uses ES modules and is intended for server-side JavaScript.
+Requires **Node.js 22 or newer**, or **Bun**. This package supports ES modules and CommonJS and is intended for server-side JavaScript. TypeScript declarations are included for both formats.
 
 Once the package is published to npm:
 
@@ -23,7 +23,7 @@ bun install
 bun run build
 ```
 
-You can then import from `./dist/index.js`, or install the built checkout into another project with `npm install /path/to/statement-kit`.
+You can then import from `./dist/index.js`, require `./dist/index.cjs`, or install the built checkout into another project with `npm install /path/to/statement-kit`.
 
 ## Quick start
 
@@ -44,6 +44,12 @@ if (error) {
   console.log(data.warnings);
   console.log(data.toCSV());
 }
+```
+
+For CommonJS, load the same API with `require`:
+
+```js
+const { parse, parseAsync } = require("statement-kit");
 ```
 
 `ParseResult` is a TypeScript discriminated union. Checking `error` narrows `data` to its corresponding success or failure class. Failure data has no export methods, so it cannot be mistaken for a successfully parsed empty statement.
@@ -223,7 +229,7 @@ bun run build
 npm pack --dry-run
 ```
 
-`bun run test` builds the package and runs the tests. Tests cover supported bank layouts, generic text/border extraction, real synthetic PDF loading, rotated and multipage documents, password failures, the non-throwing API, exports, and Node.js compatibility.
+`bun run build` uses tsup to generate ESM (`dist/index.js`), CommonJS (`dist/index.cjs`), their TypeScript declarations, and the private PDF workers. `bun run test` builds the package and runs the tests. Tests cover supported bank layouts, generic text/border extraction, real synthetic PDF loading, rotated and multipage documents, password failures, the non-throwing API, exports, and Node.js compatibility through both `import` and `require`.
 
 Five randomized PDF replicas are included under [`tests/fixtures/statements`](./tests/fixtures/statements/README.md), covering 128 pages and 1,740 transactions. They preserve the reference layouts and page counts while replacing customer data with fictional values. Their independent JSON expectations verify every parsed field through both `parse()` and `parseAsync()`. Tests use the included files directly and require none of the original documents. See the fixture README for seeds, hashes, and regeneration with `bun run fixtures:generate`.
 

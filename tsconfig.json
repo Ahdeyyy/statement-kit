@@ -12,5 +12,5 @@
     "noImplicitOverride": true,
     "noEmit": true
   },
-  "include": ["index.ts", "src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"]
+  "include": ["index.ts", "src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts", "tsup.config.ts"]
 }
