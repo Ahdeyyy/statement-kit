@@ -1,0 +1,34 @@
+{
+  "name": "statement-kit",
+  "version": "0.1.0",
+  "description": "Parse Nigerian bank statement PDFs into transactions, account information, CSV and TSV.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "sideEffects": false,
+  "license": "MIT",
+  "engines": { "node": ">=22" },
+  "keywords": ["nigeria", "bank-statement", "pdf", "gtbank", "zenith", "uba", "cowrywise", "csv", "parser"],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "bun run build && bun test tests",
+    "fixtures:generate": "bun scripts/generate-pdf-fixtures.ts",
+    "prepack": "npm run build"
+  },
+  "dependencies": { "unpdf": "^1.8.1" },
+  "devDependencies": {
+    "@types/bun": "^1.4.2",
+    "@types/node": "^22.0.0",
+    "typescript": "^6.0.2"
+  }
+}
