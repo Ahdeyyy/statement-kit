@@ -137,8 +137,8 @@ describe('public parser API', () => {
   for (const format of ['module', 'commonjs'] as const) {
     test(`built ${format} package works under Node without Bun`, () => {
       const load = format === 'module'
-        ? `import { parse, parseAsync, Statement } from 'statement-kit';`
-        : `const { parse, parseAsync, Statement } = require('statement-kit');`;
+        ? `import { parse, parseAsync, Statement } from '@ahdeyy/statement-kit';`
+        : `const { parse, parseAsync, Statement } = require('@ahdeyy/statement-kit');`;
       const code = `${load}
         (async () => {
           const a = parse('gtbank', process.argv[1]);

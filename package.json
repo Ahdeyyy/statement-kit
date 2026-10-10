@@ -1,5 +1,5 @@
 {
-  "name": "statement-kit",
+  "name": "@ahdeyy/statement-kit",
   "version": "0.1.0",
   "description": "Parse Nigerian bank statement PDFs into transactions, account information, CSV and TSV.",
   "type": "module",
@@ -28,6 +28,18 @@
   "files": ["dist", "README.md", "LICENSE"],
   "sideEffects": false,
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ahdeyyy/statement-kit.git"
+  },
+  "homepage": "https://github.com/Ahdeyyy/statement-kit#readme",
+  "bugs": {
+    "url": "https://github.com/Ahdeyyy/statement-kit/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "engines": {
     "node": ">=22"
   },

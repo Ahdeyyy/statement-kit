@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "statement-kit",
+      "name": "@ahdeyy/statement-kit",
       "dependencies": {
         "unpdf": "^1.8.1",
       },

@@ -1,4 +1,4 @@
-﻿# statement-kit
+# statement-kit
 
 Parse Nigerian bank statement PDFs into account information and transactions. Export the transactions as CSV, TSV, custom delimited text, or JSON.
 
@@ -6,14 +6,12 @@ Parsing runs locally using [unpdf](https://github.com/unjs/unpdf) and PDF.js; st
 
 ## Installation
 
-For server-side use, requires **Node.js 22 or newer**, or **Bun**, with ES module and CommonJS support. For client-side use, import the ES module entry `statement-kit/browser` in a modern browser application. TypeScript declarations are included for all entries.
-
-Once the package is published to npm:
+For server-side use, requires **Node.js 22 or newer**, or **Bun**, with ES module and CommonJS support. For client-side use, import the ES module entry `@ahdeyy/statement-kit/browser` in a modern browser application. TypeScript declarations are included for all entries.
 
 ```sh
-npm install statement-kit
+npm install @ahdeyy/statement-kit
 # or
-bun add statement-kit
+bun add @ahdeyy/statement-kit
 ```
 
 To use this checkout locally:
@@ -28,7 +26,7 @@ You can then import from `./dist/index.js`, require `./dist/index.cjs`, or insta
 ## Quick start
 
 ```ts
-import { parse } from "statement-kit";
+import { parse } from "@ahdeyy/statement-kit";
 
 // Synchronous. Parsing failures are returned; parse does not throw.
 const { data, error } = parse("gtbank", "path/to/statement.pdf");
@@ -49,7 +47,7 @@ if (error) {
 For CommonJS, load the same API with `require`:
 
 ```js
-const { parse, parseAsync } = require("statement-kit");
+const { parse, parseAsync } = require("@ahdeyy/statement-kit");
 ```
 
 `ParseResult` is a TypeScript discriminated union. Checking `error` narrows `data` to its corresponding success or failure class. Failure data has no export methods, so it cannot be mistaken for a successfully parsed empty statement.
@@ -66,7 +64,7 @@ const { parse, parseAsync } = require("statement-kit");
 Names are case-insensitive and ignore spaces, hyphens, and punctuation. Aliases include `gtb`, `gt`, `guaranty-trust-bank`, `zenith-bank`, and `united-bank-for-africa`.
 
 ```ts
-import { supportedBanks } from "statement-kit";
+import { supportedBanks } from "@ahdeyy/statement-kit";
 
 console.log(supportedBanks);
 // [{ id: "gtbank", name: "Guaranty Trust Bank (GTBank)" }, ...]
@@ -82,7 +80,7 @@ An explicit institution ID uses its dedicated parser. It returns `unsupported_la
 ## Asynchronous parsing
 
 ```ts
-import { parseAsync } from "statement-kit";
+import { parseAsync } from "@ahdeyy/statement-kit";
 
 const { data, error } = await parseAsync("uba", "path/to/statement.pdf");
 
@@ -96,10 +94,10 @@ if (!error) {
 
 ## Browser parsing
 
-Import `statement-kit/browser` through your application's bundler. This entry exposes `parseAsync`, the statement/error classes, `supportedBanks`, and the corresponding types. It accepts `File`, `Blob`, `Uint8Array`, and `ArrayBuffer`, and returns the same statements, errors, and export methods as the Node entry.
+Import `@ahdeyy/statement-kit/browser` through your application's bundler. This entry exposes `parseAsync`, the statement/error classes, `supportedBanks`, and the corresponding types. It accepts `File`, `Blob`, `Uint8Array`, and `ArrayBuffer`, and returns the same statements, errors, and export methods as the Node entry.
 
 ```ts
-import { parseAsync } from "statement-kit/browser";
+import { parseAsync } from "@ahdeyy/statement-kit/browser";
 
 // A File from <input type="file"> or a drag-and-drop upload:
 const file = document.querySelector<HTMLInputElement>('input[type="file"]')!.files![0];
@@ -129,7 +127,7 @@ Both Node functions accept a local file path, a `file:` URL, a `Buffer`, a `Uint
 
 ```ts
 import { readFile } from "node:fs/promises";
-import { parse, parseAsync } from "statement-kit";
+import { parse, parseAsync } from "@ahdeyy/statement-kit";
 
 const bytes = await readFile("statement.pdf");
 const fromBytes = await parseAsync("zenith", bytes);
@@ -185,7 +183,7 @@ A successful `data` value is an instance of the exported `Statement` class:
 
 ```ts
 import { writeFileSync } from "node:fs";
-import { parse } from "statement-kit";
+import { parse } from "@ahdeyy/statement-kit";
 
 const { data, error } = parse("gtbank", "statement.pdf");
 
