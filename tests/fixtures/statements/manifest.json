@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "baseSeed": 1877118353,
+  "fixtures": [
+    {
+      "id": "gtbank-rotated",
+      "bank": "gtbank",
+      "pages": 98,
+      "rows": 1097,
+      "size": [
+        595,
+        842
+      ],
+      "rotation": 90,
+      "features": [
+        "rotated long-form",
+        "first-page-only header",
+        "wrapped references",
+        "description across page boundary"
+      ],
+      "seed": 236586826,
+      "pdf": "gtbank-rotated.pdf",
+      "expected": "gtbank-rotated.expected.json",
+      "pdfSha256": "aabcccd018bc4733bf6b6dea1a0aaa72ae786ab9c0cd9da5bf6e4c6574ce7e8a",
+      "expectedSha256": "f96caceb044398e48fafadced0a4a4334ab87279fe084235adaa3891289ccdb8"
+    },
+    {
+      "id": "gtbank-short",
+      "bank": "gtbank",
+      "pages": 5,
+      "rows": 55,
+      "size": [
+        595,
+        842
+      ],
+      "rotation": 0,
+      "features": [
+        "portrait short-form",
+        "split header labels",
+        "wrapped dates",
+        "centered descriptions",
+        "reprinted boundary transaction"
+      ],
+      "seed": 2891022595,
+      "pdf": "gtbank-short.pdf",
+      "expected": "gtbank-short.expected.json",
+      "pdfSha256": "3bbc8e40fd03b34262de608b9abea99c2b46d867086a296692f27bcd8640a560",
+      "expectedSha256": "afdb5b92d6bd872b579b7eda09d0f4b5d5099cd9806e1ea6dac18e2afa5eb5a0"
+    },
+    {
+      "id": "gtbank-landscape",
+      "bank": "gtbank",
+      "pages": 5,
+      "rows": 58,
+      "size": [
+        842,
+        595
+      ],
+      "rotation": 0,
+      "features": [
+        "upright landscape",
+        "centered headers with left-aligned data",
+        "masked account",
+        "Originating Branch",
+        "centered descriptions"
+      ],
+      "seed": 1250491068,
+      "pdf": "gtbank-landscape.pdf",
+      "expected": "gtbank-landscape.expected.json",
+      "pdfSha256": "a82e0ed30dea2e291587b3c83e4c6eb3b07c591d51a28d0477721ff5acbab16f",
+      "expectedSha256": "078e95652bdda7ab57c75584699fc3ba18b7411e4e673a2aacdc613c655d7351"
+    },
+    {
+      "id": "uba",
+      "bank": "uba",
+      "pages": 7,
+      "rows": 65,
+      "size": [
+        595,
+        842
+      ],
+      "rotation": 0,
+      "features": [
+        "summary-only first page",
+        "three-row table header",
+        "masked account",
+        "centered narration",
+        "drawn table borders"
+      ],
+      "seed": 3904926837,
+      "pdf": "uba.pdf",
+      "expected": "uba.expected.json",
+      "pdfSha256": "aa9747fabd6953e89be62c5f6a1057b0e90245788484a2bb0e1c2ffabae9ba26",
+      "expectedSha256": "5259c7d9a4ca5ce1de1a10b6a4a24b7c0d017eaeda2ddf99bc770398ef41b2a0"
+    },
+    {
+      "id": "zenith",
+      "bank": "zenith",
+      "pages": 13,
+      "rows": 465,
+      "size": [
+        595,
+        842
+      ],
+      "rotation": 0,
+      "features": [
+        "first-page-only header",
+        "credit and value date in one text run",
+        "zero-valued unused columns",
+        "wrapped descriptions"
+      ],
+      "seed": 2264395310,
+      "pdf": "zenith.pdf",
+      "expected": "zenith.expected.json",
+      "pdfSha256": "457ffa952fd53a9b6c5339fafddfb61464cd6a8098d9834719141156bf614483",
+      "expectedSha256": "d013717a09c4faceaf7aa238d0b586c0b9db459328cbb2960d9f224c1dcfa69e"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+# Checked-in PDFs are binary fixtures; preserve their bytes and hashes.
+tests/fixtures/statements/*.pdf binary
+tests/fixtures/statements/*.json text eol=lf

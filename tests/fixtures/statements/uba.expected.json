@@ -1,0 +1,404 @@
+{
+  "info": {
+    "bank": "uba",
+    "bankName": "United Bank for Africa (UBA)",
+    "accountNumber": "001xxxxx82",
+    "accountName": "ROVERO LITEKA",
+    "currency": "NGN",
+    "openingBalance": 705067.33,
+    "period": "08-Feb-2033 - 17-Mar-2033"
+  },
+  "transactions": [
+    {
+      "date": 1991520000000,
+      "amount": 368.16,
+      "balance": 705435.49,
+      "description": "TRANSFER KAZANO TEROBE REF 168903433759 SDTU FOR JGCKMWT 84343"
+    },
+    {
+      "date": 1991606400000,
+      "amount": -5823.23,
+      "balance": 699612.26,
+      "description": "PAYMENT RONORO BETEKA REF 201711215056 VDAK"
+    },
+    {
+      "date": 1991692800000,
+      "amount": 9252.6,
+      "balance": 708864.86,
+      "description": "TRANSFER VESUTE TEVEZA REF 793249819489 VGQZ FOR GBVBPPY 60485"
+    },
+    {
+      "date": 1991779200000,
+      "amount": -8105.36,
+      "balance": 700759.5,
+      "description": "PAYMENT BESURO LIVEZA REF 644439277361 BLHC"
+    },
+    {
+      "date": 1991865600000,
+      "amount": -4027.65,
+      "balance": 696731.85,
+      "description": "PAYMENT ROROVE BEKANO REF 468636625341 UATX"
+    },
+    {
+      "date": 1991952000000,
+      "amount": 8033.96,
+      "balance": 704765.81,
+      "description": "TRANSFER BENOVE KAVEMO REF 848542993510 KJLK FOR DVAWSPV 38544"
+    },
+    {
+      "date": 1992038400000,
+      "amount": -975.97,
+      "balance": 703789.84,
+      "description": "PAYMENT SUNOSU SUVETE REF 264536818547 FBNS FOR ZBPFVYY 11485"
+    },
+    {
+      "date": 1992124800000,
+      "amount": -5341.09,
+      "balance": 698448.75,
+      "description": "PAYMENT VEZAZA KAZABE REF 822337277393 UWRF FOR JJDETNZ 22695 VIA ADRWL 83535570"
+    },
+    {
+      "date": 1992124800000,
+      "amount": 6153.55,
+      "balance": 704602.3,
+      "description": "TRANSFER VEZATE ZAVEKA REF 680038970888 DDMC"
+    },
+    {
+      "date": 1992211200000,
+      "amount": -5646.91,
+      "balance": 698955.39,
+      "description": "PAYMENT NOSUZA VEBEVE REF 462359963559 NZWY FOR TSHTZQM 78163"
+    },
+    {
+      "date": 1992211200000,
+      "amount": 5340.82,
+      "balance": 704296.21,
+      "description": "TRANSFER BEROKA LIMOKA REF 610607010284 LBDW FOR QYCNQHC 45407 VIA CPPKF 86506471"
+    },
+    {
+      "date": 1992211200000,
+      "amount": -5068.46,
+      "balance": 699227.75,
+      "description": "PAYMENT SUTEBE NOBEMO REF 437857393623 THWK"
+    },
+    {
+      "date": 1992211200000,
+      "amount": -9556.99,
+      "balance": 689670.76,
+      "description": "PAYMENT BESUBE LINOLI REF 280313583996 JMCJ FOR PZNEGCW 14348"
+    },
+    {
+      "date": 1992211200000,
+      "amount": 6988.08,
+      "balance": 696658.84,
+      "description": "TRANSFER MONOKA ROBEKA REF 287770470922 KEDE FOR AUAJTEY 21742 VIA NASMJ 24321066"
+    },
+    {
+      "date": 1992211200000,
+      "amount": 6792.67,
+      "balance": 703451.51,
+      "description": "TRANSFER TEBEZA LINOMO REF 221014464717 VBWL FOR FPGZGNG 83574 VIA CYBSF 33507947"
+    },
+    {
+      "date": 1992297600000,
+      "amount": -6535.11,
+      "balance": 696916.4,
+      "description": "PAYMENT NOROMO TEZAKA REF 752646195811 REUX FOR BUDVQXW 77161 VIA VTFTR 16319789"
+    },
+    {
+      "date": 1992384000000,
+      "amount": 1499.71,
+      "balance": 698416.11,
+      "description": "TRANSFER ZAVEBE MOBERO REF 418580380778 QXMZ FOR YTPKLFA 57849 VIA JWNPQ 39411351"
+    },
+    {
+      "date": 1992470400000,
+      "amount": 3856.95,
+      "balance": 702273.06,
+      "description": "TRANSFER NOLISU SUVEBE REF 559754225705 LKAR FOR NULALSK 00741 VIA JZWGW 77926431"
+    },
+    {
+      "date": 1992556800000,
+      "amount": -4392.19,
+      "balance": 697880.87,
+      "description": "PAYMENT ZAROTE LIMONO REF 662295556418 ZKGH"
+    },
+    {
+      "date": 1992643200000,
+      "amount": 8241.57,
+      "balance": 706122.44,
+      "description": "TRANSFER BEMOSU KARONO REF 140956799671 WTJQ FOR FAEAEYQ 26682"
+    },
+    {
+      "date": 1992643200000,
+      "amount": 8420.71,
+      "balance": 714543.15,
+      "description": "TRANSFER MONOBE SUSUTE REF 296093787499 ZNZS FOR NLQTATM 28939 VIA PEHXP 36166236"
+    },
+    {
+      "date": 1992729600000,
+      "amount": -8681.35,
+      "balance": 705861.8,
+      "description": "PAYMENT LIRONO MOVEKA REF 904273096392 LRYY"
+    },
+    {
+      "date": 1992729600000,
+      "amount": -3983.96,
+      "balance": 701877.84,
+      "description": "PAYMENT NONOKA ROLINO REF 500477397410 QJZQ FOR HPBBSZS 21817 VIA YXPFK 76147982"
+    },
+    {
+      "date": 1992729600000,
+      "amount": 8451.9,
+      "balance": 710329.74,
+      "description": "TRANSFER KATESU BETESU REF 419172385177 LYLH FOR MBGLEWT 95824"
+    },
+    {
+      "date": 1992729600000,
+      "amount": 8695.62,
+      "balance": 719025.36,
+      "description": "TRANSFER ROBEMO ZAMOVE REF 422635845647 AZAB FOR QVKXNLL 99430"
+    },
+    {
+      "date": 1992816000000,
+      "amount": 4798.39,
+      "balance": 723823.75,
+      "description": "TRANSFER BENOVE NOVENO REF 591391311708 XCGC FOR NNDRRQW 31465 VIA MZZHZ 24000667"
+    },
+    {
+      "date": 1992902400000,
+      "amount": 1549.7,
+      "balance": 725373.45,
+      "description": "TRANSFER MOKANO TEVEBE REF 814859702515 NHHV FOR UUKMZEG 22142 VIA HNGKC 14932622"
+    },
+    {
+      "date": 1992988800000,
+      "amount": -4738.78,
+      "balance": 720634.67,
+      "description": "PAYMENT VETELI NOROBE REF 275556861171 ZKCU FOR HVZMSRC 76938"
+    },
+    {
+      "date": 1993075200000,
+      "amount": -7806.44,
+      "balance": 712828.23,
+      "description": "PAYMENT KAVERO SUBEKA REF 033490539625 DQZX FOR CCJUVHX 08349 VIA LFDLS 84409713"
+    },
+    {
+      "date": 1993075200000,
+      "amount": 9589.61,
+      "balance": 722417.84,
+      "description": "TRANSFER SUKALI BENOKA REF 779918554372 KEKY FOR UCNAWWX 18835"
+    },
+    {
+      "date": 1993161600000,
+      "amount": -1598.77,
+      "balance": 720819.07,
+      "description": "PAYMENT BETEBE VEVETE REF 960480608611 EBLF FOR FZWMDMQ 05994"
+    },
+    {
+      "date": 1993248000000,
+      "amount": 1724.01,
+      "balance": 722543.08,
+      "description": "TRANSFER SULINO KANOZA REF 428362292992 XLJD FOR KQJSGFL 14517 VIA TSQMD 85277859"
+    },
+    {
+      "date": 1993248000000,
+      "amount": 6617.11,
+      "balance": 729160.19,
+      "description": "TRANSFER VESUNO KATEZA REF 277158727943 WHGV FOR FRZBMBA 80953"
+    },
+    {
+      "date": 1993334400000,
+      "amount": -295.43,
+      "balance": 728864.76,
+      "description": "PAYMENT BENOMO ROSUBE REF 252611465118 UGZY FOR MYXLUHQ 34929 VIA QJDVG 47185256"
+    },
+    {
+      "date": 1993420800000,
+      "amount": 3941.66,
+      "balance": 732806.42,
+      "description": "TRANSFER TERORO BESUZA REF 306263351978 RDYR"
+    },
+    {
+      "date": 1993420800000,
+      "amount": -3686.18,
+      "balance": 729120.24,
+      "description": "PAYMENT SUTELI ZAVEBE REF 933395063481 CCPR"
+    },
+    {
+      "date": 1993420800000,
+      "amount": -2580.4,
+      "balance": 726539.84,
+      "description": "PAYMENT VEBEMO SUMOLI REF 038479274373 WBTD FOR LDSXWLW 62112"
+    },
+    {
+      "date": 1993507200000,
+      "amount": -6052.31,
+      "balance": 720487.53,
+      "description": "PAYMENT ZAMOSU SUSUTE REF 316500208321 VMSM FOR QSCCQNX 95756"
+    },
+    {
+      "date": 1993507200000,
+      "amount": 2470.65,
+      "balance": 722958.18,
+      "description": "TRANSFER NOBETE ROVENO REF 064910627122 JHLR"
+    },
+    {
+      "date": 1993507200000,
+      "amount": 5965.45,
+      "balance": 728923.63,
+      "description": "TRANSFER VEZANO NOSUKA REF 125159497042 ASSV FOR BUTMRXC 35841 VIA GDTXK 26893543"
+    },
+    {
+      "date": 1993507200000,
+      "amount": 4365.5,
+      "balance": 733289.13,
+      "description": "TRANSFER KAZASU SULINO REF 592317639434 YGAP"
+    },
+    {
+      "date": 1993507200000,
+      "amount": 5001.67,
+      "balance": 738290.8,
+      "description": "TRANSFER BELIRO MOZARO REF 928888653711 ZGRJ"
+    },
+    {
+      "date": 1993507200000,
+      "amount": 1156.76,
+      "balance": 739447.56,
+      "description": "TRANSFER ROLIZA LISUZA REF 228464551329 CVRH"
+    },
+    {
+      "date": 1993507200000,
+      "amount": -2253.93,
+      "balance": 737193.63,
+      "description": "PAYMENT LIZAVE ZAROVE REF 665898408058 HCQM"
+    },
+    {
+      "date": 1993593600000,
+      "amount": -5152.17,
+      "balance": 732041.46,
+      "description": "PAYMENT TESUKA BEMOLI REF 135517458189 DGQX FOR AVEYFPU 08263 VIA EHMSE 78112905"
+    },
+    {
+      "date": 1993593600000,
+      "amount": -4673.71,
+      "balance": 727367.75,
+      "description": "PAYMENT NONOBE ROKAMO REF 582773398626 HNGG FOR STLENWV 78822"
+    },
+    {
+      "date": 1993593600000,
+      "amount": 4744.17,
+      "balance": 732111.92,
+      "description": "TRANSFER ZALISU SUZARO REF 817042321215 WYQY FOR SYRZFGZ 23384"
+    },
+    {
+      "date": 1993680000000,
+      "amount": -9581.78,
+      "balance": 722530.14,
+      "description": "PAYMENT KAROMO TELIKA REF 166905944249 AEJL FOR ATQRFVA 95685 VIA NERZY 81770361"
+    },
+    {
+      "date": 1993766400000,
+      "amount": -4522.55,
+      "balance": 718007.59,
+      "description": "PAYMENT MOVELI VENORO REF 590717491001 CYPE FOR LVDJDLG 70034"
+    },
+    {
+      "date": 1993766400000,
+      "amount": -39.97,
+      "balance": 717967.62,
+      "description": "PAYMENT TEZANO MOMORO REF 722565027076 DGRW FOR UGPXSXT 30216 VIA DABQJ 23714031"
+    },
+    {
+      "date": 1993852800000,
+      "amount": 6875.7,
+      "balance": 724843.32,
+      "description": "TRANSFER KATENO LITEBE REF 030945239039 VQNK FOR XBTVCEZ 79944"
+    },
+    {
+      "date": 1993939200000,
+      "amount": -1890.43,
+      "balance": 722952.89,
+      "description": "PAYMENT NOTETE SUROMO REF 125970148342 JPGW FOR XFCFTBV 75137"
+    },
+    {
+      "date": 1994025600000,
+      "amount": 6485.5,
+      "balance": 729438.39,
+      "description": "TRANSFER ZANONO ZATENO REF 863533392243 RSNF"
+    },
+    {
+      "date": 1994112000000,
+      "amount": -5045.53,
+      "balance": 724392.86,
+      "description": "PAYMENT TENOTE SUBENO REF 252131832282 MFBJ FOR TSZYFPT 56554 VIA MWQKP 47187053"
+    },
+    {
+      "date": 1994198400000,
+      "amount": 7455.42,
+      "balance": 731848.28,
+      "description": "TRANSFER KAMOVE ROKAVE REF 614118243119 LLPU FOR WPCHRJM 29943 VIA GWTSK 88042603"
+    },
+    {
+      "date": 1994198400000,
+      "amount": -9018.42,
+      "balance": 722829.86,
+      "description": "PAYMENT TEROMO ZAMOVE REF 002759294372 WSDU FOR KWTUMPP 20458"
+    },
+    {
+      "date": 1994198400000,
+      "amount": -449.87,
+      "balance": 722379.99,
+      "description": "PAYMENT TEBEMO ZASUSU REF 296692647368 CCMB FOR UJVVJMG 79726 VIA QEEXD 62327060"
+    },
+    {
+      "date": 1994198400000,
+      "amount": -5862.67,
+      "balance": 716517.32,
+      "description": "PAYMENT BEBENO ROLISU REF 889945175984 WUDK FOR KBWEQUZ 32837 VIA YUUKL 02673596"
+    },
+    {
+      "date": 1994284800000,
+      "amount": -6411.58,
+      "balance": 710105.74,
+      "description": "PAYMENT SUZALI LIVERO REF 976439814800 NDZQ FOR YHAEVPJ 33729 VIA XNBAF 11343525"
+    },
+    {
+      "date": 1994371200000,
+      "amount": 5304.03,
+      "balance": 715409.77,
+      "description": "TRANSFER ROLISU KABELI REF 600469885201 VUGJ FOR RYYQXDG 76341"
+    },
+    {
+      "date": 1994371200000,
+      "amount": 4589.56,
+      "balance": 719999.33,
+      "description": "TRANSFER KAVERO ROLISU REF 756707126096 DDKY FOR NLAPBHL 16536 VIA JTQMQ 96291886"
+    },
+    {
+      "date": 1994457600000,
+      "amount": 3666.86,
+      "balance": 723666.19,
+      "description": "TRANSFER KANORO TEMORO REF 700104271796 KFMD"
+    },
+    {
+      "date": 1994544000000,
+      "amount": 6831.45,
+      "balance": 730497.64,
+      "description": "TRANSFER RONOBE KATENO REF 713868603679 HBNU FOR FRAVTLL 58031 VIA MDBNK 75279869"
+    },
+    {
+      "date": 1994630400000,
+      "amount": 2256.32,
+      "balance": 732753.96,
+      "description": "TRANSFER VEZALI VESUBE REF 908573609085 CASN"
+    },
+    {
+      "date": 1994630400000,
+      "amount": -9950.78,
+      "balance": 722803.18,
+      "description": "PAYMENT VEVESU VEVENO REF 784931925737 YLDK FOR SXGCWFD 45719 VIA GPQKL 64062071"
+    }
+  ],
+  "warnings": []
+}
