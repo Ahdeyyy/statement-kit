@@ -1,6 +1,6 @@
 import { defineConfig } from 'tsup';
 
-export default defineConfig({
+export default defineConfig([{
   entry: ['src/index.ts', 'src/pdf-worker.ts'],
   format: ['esm', 'cjs'],
   platform: 'node',
@@ -13,5 +13,14 @@ export default defineConfig({
   },
   splitting: false,
   shims: true,
-  clean: true,
-});
+  clean: ['dist/index.*', 'dist/pdf-worker.*'],
+}, {
+  entry: ['src/browser.ts'],
+  format: ['esm'],
+  platform: 'browser',
+  target: 'es2022',
+  tsconfig: 'tsconfig.build.json',
+  dts: { compilerOptions: { ignoreDeprecations: '6.0' } },
+  splitting: false,
+  clean: ['dist/browser.*'],
+}]);

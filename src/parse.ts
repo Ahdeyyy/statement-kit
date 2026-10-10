@@ -3,17 +3,12 @@ import { readFile } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { resolveBank } from './banks.js';
-import { normalizeError, StatementParseError } from './errors.js';
+import { StatementParseError } from './errors.js';
 import { Statement, StatementFailure } from './statement.js';
-import { parsePages } from './core.js';
-import type { ParseOptions, ParseResult, StatementSource } from './types.js';
+import { binary, failure, parseSource, readBinary, validateOptions } from './parse-shared.js';
+import type { AsyncStatementSource, ParseOptions, ParseResult, StatementSource } from './types.js';
 
-function failure(error: unknown): ParseResult {
-  const normalized = normalizeError(error);
-  return { data: new StatementFailure(normalized), error: normalized };
-}
-
-function validate(source: StatementSource, options: ParseOptions): void {
+function validateSource(source: StatementSource): void {
   if (typeof source === 'string') {
     if (!source.trim() || source.includes('\0')) {
       throw new StatementParseError('invalid_input', 'Provide a non-empty statement file path.');
@@ -23,23 +18,14 @@ function validate(source: StatementSource, options: ParseOptions): void {
   } else if (!(source instanceof Uint8Array) && !(source instanceof ArrayBuffer)) {
     throw new StatementParseError('invalid_input', 'Provide a file path, file URL, Uint8Array, Buffer or ArrayBuffer.');
   }
-  if (!options || typeof options !== 'object' || Array.isArray(options) ||
-      (options.password !== undefined && typeof options.password !== 'string') ||
-      (options.timeoutMs !== undefined && (!Number.isSafeInteger(options.timeoutMs) || options.timeoutMs <= 0))) {
-    throw new StatementParseError('invalid_input', 'Options must contain a string password and/or a positive integer timeoutMs.');
-  }
-}
-
-function binary(source: Uint8Array | ArrayBuffer): Uint8Array {
-  // PDF.js may transfer its input; never detach or mutate caller-owned bytes.
-  return source instanceof Uint8Array ? new Uint8Array(source) : new Uint8Array(source.slice(0));
 }
 
 /** Parse without throwing or returning a promise. Requires child-process support. */
 export function parse(bank: string, source: StatementSource, options: ParseOptions = {}): ParseResult {
   try {
     const selected = resolveBank(bank);
-    validate(source, options);
+    validateSource(source);
+    validateOptions(options);
     const bytes = typeof source === 'string' || source instanceof URL
       ? new Uint8Array(readFileSync(source)) : binary(source);
     if (bytes.length === 0) throw new StatementParseError('invalid_pdf', 'The PDF is empty.');
@@ -74,16 +60,12 @@ export function parse(bank: string, source: StatementSource, options: ParseOptio
 }
 
 /** Parse in the current process. All input, PDF and parser failures are returned. */
-export async function parseAsync(bank: string, source: StatementSource, options: ParseOptions = {}): Promise<ParseResult> {
-  try {
-    const selected = resolveBank(bank);
-    validate(source, options);
-    const bytes = typeof source === 'string' || source instanceof URL
-      ? new Uint8Array(await readFile(source)) : binary(source);
-    const { extractPdf } = await import('./pdf.js');
-    const { pages, rulings } = await extractPdf(bytes, options.password);
-    return parsePages(selected, pages, rulings);
-  } catch (error) {
-    return failure(error);
-  }
+export function parseAsync(bank: string, source: AsyncStatementSource, options: ParseOptions = {}): Promise<ParseResult> {
+  return parseSource(bank, source, options, async (input) => {
+    if (typeof input === 'string' || input instanceof URL) {
+      validateSource(input);
+      return new Uint8Array(await readFile(input));
+    }
+    return readBinary(input);
+  });
 }

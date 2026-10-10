@@ -4,6 +4,6 @@ export { StatementParseError } from './errors.js';
 export { supportedBanks } from './banks.js';
 export type { ParseErrorCode } from './errors.js';
 export type {
-  BankName, ParserName, StatementSource, StatementInfo, Transaction,
-  ParseOptions, ExportOptions, ParseResult,
+  BankName, ParserName, StatementSource, AsyncStatementSource, BrowserStatementSource, StatementInfo, Transaction,
+  ParseOptions, BrowserParseOptions, ExportOptions, ParseResult,
 } from './types.js';

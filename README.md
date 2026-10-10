@@ -6,7 +6,7 @@ Parsing runs locally using [unpdf](https://github.com/unjs/unpdf) and PDF.js; st
 
 ## Installation
 
-Requires **Node.js 22 or newer**, or **Bun**. This package supports ES modules and CommonJS and is intended for server-side JavaScript. TypeScript declarations are included for both formats.
+For server-side use, requires **Node.js 22 or newer**, or **Bun**, with ES module and CommonJS support. For client-side use, import the ES module entry `statement-kit/browser` in a modern browser application. TypeScript declarations are included for all entries.
 
 Once the package is published to npm:
 
@@ -94,9 +94,38 @@ if (!error) {
 
 `parse()` preserves the synchronous API and blocks the calling thread. It runs PDF parsing in a child process using the current Node.js or Bun executable. The default child-process timeout is 120 seconds, with a 64 MiB output limit. Use `parseAsync()` for request handlers or environments that cannot start child processes. It reads files asynchronously and parses in the current process; PDF processing still uses CPU on that process's event loop.
 
+## Browser parsing
+
+Import `statement-kit/browser` through your application's bundler. This entry exposes `parseAsync`, the statement/error classes, `supportedBanks`, and the corresponding types. It accepts `File`, `Blob`, `Uint8Array`, and `ArrayBuffer`, and returns the same statements, errors, and export methods as the Node entry.
+
+```ts
+import { parseAsync } from "statement-kit/browser";
+
+// A File from <input type="file"> or a drag-and-drop upload:
+const file = document.querySelector<HTMLInputElement>('input[type="file"]')!.files![0];
+const { data, error } = await parseAsync("auto", file);
+
+if (error) {
+  console.error(error.code, error.message);
+} else {
+  console.log(data.info, data.transactions);
+  console.log(data.toCSV());
+}
+
+// Bytes produced by any PDF library are also supported:
+const bytes = await file.arrayBuffer();
+await parseAsync("gtbank", bytes, { password: "your-statement-password" });
+```
+
+Library-specific PDF document objects have no common interface. Export the original PDF bytes from your library before passing them to the parser. No PDF reading library is required in the calling application.
+
+The browser entry has no Node filesystem or child-process dependencies and exposes asynchronous parsing only. Local paths and URLs are not supported; fetch a remote PDF yourself and pass its bytes if needed. Statements are processed locally, without uploading them.
+
+PDF processing runs on the calling thread. For large documents, import the browser entry inside an application Web Worker to keep the UI responsive; use `data.toJSON()` when posting the result back, since structured cloning does not preserve class methods. The PDF engine adds roughly 500 KiB gzipped to a browser bundle, depending on your bundler. Lazy-load the browser entry when parsing is needed. The browser options accept `password`; `timeoutMs` applies only to the Node synchronous API.
+
 ## Inputs and passwords
 
-Both functions accept a local file path, a `file:` URL, a `Buffer`, a `Uint8Array`, or an `ArrayBuffer`. Paths are relative to the current working directory. Caller-owned binary input is copied so PDF processing does not detach or modify it. Remote URLs are not accepted.
+Both Node functions accept a local file path, a `file:` URL, a `Buffer`, a `Uint8Array`, or an `ArrayBuffer`. Node `parseAsync()` additionally accepts `File` and `Blob`. Synchronous `parse()` cannot read these asynchronous inputs. Paths are relative to the current working directory. Caller-owned binary input is copied so PDF processing does not detach or modify it. Remote URLs are not accepted.
 
 ```ts
 import { readFile } from "node:fs/promises";
@@ -229,7 +258,7 @@ bun run build
 npm pack --dry-run
 ```
 
-`bun run build` uses tsup to generate ESM (`dist/index.js`), CommonJS (`dist/index.cjs`), their TypeScript declarations, and the private PDF workers. `bun run test` builds the package and runs the tests. Tests cover supported bank layouts, generic text/border extraction, real synthetic PDF loading, rotated and multipage documents, password failures, the non-throwing API, exports, and Node.js compatibility through both `import` and `require`.
+`bun run build` uses tsup to generate ESM (`dist/index.js`), CommonJS (`dist/index.cjs`), the browser entry (`dist/browser.js`), their TypeScript declarations, and the private PDF workers. `bun run test` builds the package and runs the tests. Tests cover supported bank layouts, generic text/border extraction, real synthetic PDF loading, rotated and multipage documents, password failures, the non-throwing API, exports, Node.js compatibility through both `import` and `require`, browser bundling, and browser-entry input/result parity.
 
 Five randomized PDF replicas are included under [`tests/fixtures/statements`](./tests/fixtures/statements/README.md), covering 128 pages and 1,740 transactions. They preserve the reference layouts and page counts while replacing customer data with fictional values. Their independent JSON expectations verify every parsed field through both `parse()` and `parseAsync()`. Tests use the included files directly and require none of the original documents. See the fixture README for seeds, hashes, and regeneration with `bun run fixtures:generate`.
 

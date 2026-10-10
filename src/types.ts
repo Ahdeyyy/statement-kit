@@ -4,6 +4,9 @@ import type { StatementParseError } from './errors.js';
 export type BankName = 'gtbank' | 'zenith' | 'uba' | 'cowrywise';
 export type ParserName = BankName | 'generic';
 export type StatementSource = string | URL | Uint8Array | ArrayBuffer;
+/** Library-independent inputs supported by the browser entry point. File extends Blob. */
+export type BrowserStatementSource = Uint8Array | ArrayBuffer | Blob;
+export type AsyncStatementSource = StatementSource | Blob;
 
 export type StatementInfo = {
   bank: ParserName;
@@ -31,6 +34,8 @@ export type ParseOptions = {
   /** Synchronous parse() child-process timeout, in milliseconds. Default: 120000. */
   timeoutMs?: number;
 };
+
+export type BrowserParseOptions = Pick<ParseOptions, 'password'>;
 
 export type ExportOptions = {
   /** Include the column header. Default: true. */

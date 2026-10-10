@@ -143,8 +143,15 @@ describe('public parser API', () => {
         (async () => {
           const a = parse('gtbank', process.argv[1]);
           const b = await parseAsync('gtbank', process.argv[1]);
+          const { readFileSync } = await import('node:fs');
+          const bytes = readFileSync(process.argv[1]);
+          const blob = await parseAsync('gtbank', new Blob([bytes]));
+          const file = await parseAsync('gtbank', new File([bytes], 'statement.pdf'));
           if (a.error || b.error || !(a.data instanceof Statement) || !(b.data instanceof Statement) ||
-              a.data.transactions.length !== 2 || JSON.stringify(a.data) !== JSON.stringify(b.data)) process.exit(1);
+              blob.error || file.error || a.data.transactions.length !== 2 ||
+              JSON.stringify(a.data) !== JSON.stringify(b.data) ||
+              JSON.stringify(a.data) !== JSON.stringify(blob.data) ||
+              JSON.stringify(a.data) !== JSON.stringify(file.data)) process.exit(1);
           console.log(a.data.toCSV());
         })().catch((error) => { console.error(error); process.exitCode = 1; });`;
       const run = spawnSync('node', [`--input-type=${format}`, '-e', code, path], { encoding: 'utf8', windowsHide: true });
