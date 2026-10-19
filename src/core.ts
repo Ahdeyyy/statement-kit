@@ -10,7 +10,7 @@ export function parsePages(bank: BankName | 'auto' | 'generic', pages: Item[][],
   let selected: ParserName = bank === 'auto' ? 'generic' : bank;
   if (bank === 'auto') {
     // Try dedicated bank parsers in priority order before considering generic tables.
-    for (const name of ['zenith', 'cowrywise', 'uba', 'gtbank'] as const) {
+    for (const name of ['zenith', 'cowrywise', 'zap', 'uba', 'gtbank'] as const) {
       if (bankParsers[name].detect(pages)) { selected = name; break; }
     }
   }

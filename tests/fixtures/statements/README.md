@@ -1,6 +1,6 @@
 # Synthetic statement PDF fixtures
 
-These five PDFs are drawn from scratch with fictional, seeded random data. They
+These six PDFs are drawn from scratch with fictional, seeded random data. They
 reproduce the parsing layouts of the supplied reference documents, including
 their page dimensions, rotation, page counts, and transaction counts. They do
 not contain copied PDF pages, embedded source images, original account details,
@@ -12,6 +12,7 @@ the layout's printed date format, account numbers and references remain strings,
 masked accounts remain masked, and money has two decimal places. Currency and
 column labels remain NGN and the bank's original structural labels. Random
 debits and credits reconcile with independently generated running balances.
+Zap's externally funded payment has no wallet balance and does not change it.
 
 | PDF | Pages | Transactions | Behaviors exercised |
 | --- | ---: | ---: | --- |
@@ -20,6 +21,7 @@ debits and credits reconcile with independently generated running balances.
 | `gtbank-landscape.pdf` | 5 | 58 | Upright landscape, centered headers over left-aligned data, masked account number, wrapped references, Originating Branch column. |
 | `uba.pdf` | 7 | 65 | Summary-only first page, masked account, three-row table header, centered narration, ruled tables. |
 | `zenith.pdf` | 13 | 465 | Header only on the first page, wrapped descriptions, credit and value date in the same text run, explicit zeros in unused amount columns. |
+| `zap.pdf` | 2 | 24 | Signed amounts, eight undated transfer fees and one stamp duty, repeated headers, wrapped descriptions/type, and an externally funded payment with no wallet balance. |
 
 Each PDF has an accompanying `*.expected.json` containing account information,
 every transaction, and expected warnings. The generator derives these values
@@ -54,10 +56,12 @@ bun run test
 ```
 
 The optional seed must be an unsigned 32-bit integer. Regeneration replaces all
-five PDFs, expectations, and manifest together. Review the generated PDFs and
+six PDFs, expectations, and manifest together. Review the generated PDFs and
 commit the complete fixture set when deliberately updating it. Running the
 generator without `--seed` restores the documented default dataset.
 
 The fixture generator is `scripts/generate-pdf-fixtures.ts`. It uses the test
 PDF writer in `tests/fixtures/pdf.ts`, which writes fresh PDF objects and vector
 table furniture using built-in Helvetica and an explicit WinAnsi encoding.
+Zap's naira symbol uses a small vector glyph with a Unicode text mapping.
+Its layout generator is `scripts/zap-fixture.ts`; it reads no reference PDF.

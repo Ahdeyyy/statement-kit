@@ -162,7 +162,7 @@ describe('public parser API', () => {
   }
 
   test('exports the supported institution list', () => {
-    expect(supportedBanks.map((bank) => bank.id)).toEqual(['gtbank', 'zenith', 'uba', 'cowrywise']);
+    expect(supportedBanks.map((bank) => bank.id)).toEqual(['gtbank', 'zenith', 'uba', 'cowrywise', 'zap']);
   });
 });
 

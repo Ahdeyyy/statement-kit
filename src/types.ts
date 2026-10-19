@@ -1,7 +1,7 @@
 import type { Statement, StatementFailure } from './statement.js';
 import type { StatementParseError } from './errors.js';
 
-export type BankName = 'gtbank' | 'zenith' | 'uba' | 'cowrywise';
+export type BankName = 'gtbank' | 'zenith' | 'uba' | 'cowrywise' | 'zap';
 export type ParserName = BankName | 'generic';
 export type StatementSource = string | URL | Uint8Array | ArrayBuffer;
 /** Library-independent inputs supported by the browser entry point. File extends Blob. */

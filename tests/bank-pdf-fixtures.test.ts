@@ -28,8 +28,13 @@ describe('checked-in randomized bank statement PDFs', () => {
       expect(expected.transactions).toHaveLength(fixture.rows);
       let balance = Math.round(expected.info.openingBalance! * 100);
       for (const transaction of expected.transactions) {
-        balance += Math.round(transaction.amount * 100);
-        expect(Math.round(transaction.balance! * 100)).toBe(balance);
+        // Externally funded Zap payments do not change the wallet balance.
+        if (transaction.balance !== undefined) {
+          balance += Math.round(transaction.amount * 100);
+          expect(Math.round(transaction.balance * 100)).toBe(balance);
+        } else {
+          expect(fixture.bank).toBe('zap');
+        }
         expect(new Date(transaction.date).getUTCHours()).toBe(0);
         expect(Number.isFinite(transaction.amount)).toBe(true);
       }
@@ -43,6 +48,15 @@ describe('checked-in randomized bank statement PDFs', () => {
         await pdf.loadingTask.destroy();
       }
     }, 30_000);
+
+    if (fixture.bank === 'zap') {
+      test('zap: auto detection matches the independent expectations', async () => {
+        const result = await parseAsync('auto', pdfUrl);
+        expect(result.error).toBeNull();
+        if (result.error) throw result.error;
+        expect(result.data.toJSON()).toEqual(expected);
+      });
+    }
 
     test(`${fixture.id}: parseAsync matches every expected field and transaction`, async () => {
       const result = await parseAsync(fixture.bank, pdfUrl);

@@ -114,6 +114,30 @@
       "expected": "zenith.expected.json",
       "pdfSha256": "457ffa952fd53a9b6c5339fafddfb61464cd6a8098d9834719141156bf614483",
       "expectedSha256": "d013717a09c4faceaf7aa238d0b586c0b9db459328cbb2960d9f224c1dcfa69e"
+    },
+    {
+      "id": "zap",
+      "bank": "zap",
+      "pages": 2,
+      "rows": 24,
+      "size": [
+        595.91998,
+        842.88
+      ],
+      "rotation": 0,
+      "features": [
+        "signed amounts",
+        "undated fees and stamp duty",
+        "external payment without wallet balance",
+        "repeated account and table headers",
+        "wrapped descriptions and type",
+        "naira currency symbol"
+      ],
+      "seed": 623863783,
+      "pdf": "zap.pdf",
+      "expected": "zap.expected.json",
+      "pdfSha256": "3c9a939745cc9cf4347bb014e1d7bd3772421a180bd03270be51b84c0961cf58",
+      "expectedSha256": "c4561912dd61f31c1e5d8647d6b0ea4797ad4e3adc66f04488b1a58a3bcdb6fc"
     }
   ]
 }

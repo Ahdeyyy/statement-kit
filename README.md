@@ -60,8 +60,17 @@ const { parse, parseAsync } = require("@ahdeyy/statement-kit");
 | `zenith` | Zenith Bank | Date / Description / Debit / Credit / Value Date / Balance tables, including value dates joined to credit amounts and headers carried across pages. |
 | `uba` | United Bank for Africa (UBA) | Trans Date / Value Date / Narration / Debit / Credit / Balance tables, including split headers, summary pages, and wrapped narration. |
 | `cowrywise` | Cowrywise | Stash-style Amount / Fee / Type / Balance breakdowns with stacked direction, value, and date rows. Cowrywise is an investment platform; other product layouts are not guaranteed. |
+| `zap` | Zap by Paystack | Date / Description / Type / Source / Amount / Balance tables, signed amounts, wrapped descriptions, undated fees and stamp duty, and payments funded outside the wallet. |
 
 Names are case-insensitive and ignore spaces, hyphens, and punctuation. Aliases include `gtb`, `gt`, `guaranty-trust-bank`, `zenith-bank`, and `united-bank-for-africa`.
+
+Zap also accepts `zap-by-paystack`. Fees and stamp duty are separate debit
+transactions dated to their preceding payment. Payments funded from a bank
+account retain their signed amount and omit `balance` when no wallet balance
+is printed; they do not affect wallet balance reconciliation. Status badges,
+time of day, type, and funding source are not included in the transaction
+description. The partner bank printed in Zap's header does not change the
+institution ID from `zap`.
 
 ```ts
 import { supportedBanks } from "@ahdeyy/statement-kit";

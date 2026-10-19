@@ -4,12 +4,14 @@ import { gtbankParser } from './parsers/pdf-gtbank.js';
 import { zenithParser } from './parsers/pdf-zenith.js';
 import { ubaParser } from './parsers/pdf-uba.js';
 import { cowrywiseParser } from './parsers/pdf-cowrywise.js';
+import { zapParser } from './parsers/pdf-zap.js';
 
 export const supportedBanks = Object.freeze([
   Object.freeze({ id: 'gtbank', name: 'Guaranty Trust Bank (GTBank)' }),
   Object.freeze({ id: 'zenith', name: 'Zenith Bank' }),
   Object.freeze({ id: 'uba', name: 'United Bank for Africa (UBA)' }),
   Object.freeze({ id: 'cowrywise', name: 'Cowrywise (Stash)' }),
+  Object.freeze({ id: 'zap', name: 'Zap by Paystack' }),
 ] as const);
 
 export const bankParsers = {
@@ -17,6 +19,7 @@ export const bankParsers = {
   zenith: zenithParser,
   uba: ubaParser,
   cowrywise: cowrywiseParser,
+  zap: zapParser,
 };
 
 const aliases: Record<string, BankName | 'auto' | 'generic'> = {
@@ -24,6 +27,7 @@ const aliases: Record<string, BankName | 'auto' | 'generic'> = {
   zenith: 'zenith', zenithbank: 'zenith',
   uba: 'uba', unitedbankforafrica: 'uba',
   cowrywise: 'cowrywise', auto: 'auto', generic: 'generic',
+  zap: 'zap', zapbypaystack: 'zap',
 };
 
 export function resolveBank(bank: string): BankName | 'auto' | 'generic' {
@@ -31,7 +35,7 @@ export function resolveBank(bank: string): BankName | 'auto' | 'generic' {
   const key = bank.toLowerCase().replace(/[^a-z0-9]/g, '');
   const name = Object.hasOwn(aliases, key) ? aliases[key] : undefined;
   if (!name) {
-    throw new StatementParseError('unsupported_bank', 'Unsupported bank. Use gtbank, zenith, uba, cowrywise, auto or generic.');
+    throw new StatementParseError('unsupported_bank', 'Unsupported bank. Use gtbank, zenith, uba, cowrywise, zap, auto or generic.');
   }
   return name;
 }
