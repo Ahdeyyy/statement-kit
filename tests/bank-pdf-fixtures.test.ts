@@ -4,9 +4,9 @@ import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { getDocumentProxy } from 'unpdf';
 import { parse, parseAsync } from '../src/index.js';
-import type { BankName, StatementInfo, Transaction } from '../src/index.js';
+import type { BankName, StatementFor } from '../src/index.js';
 
-type Expected = { info: StatementInfo; transactions: Transaction[]; warnings: string[] };
+type Expected = ReturnType<StatementFor<BankName>['toJSON']>;
 type Fixture = {
   id: string; bank: BankName; pages: number; rows: number; rotation: number; size: number[];
   pdf: string; expected: string; pdfSha256: string; expectedSha256: string;

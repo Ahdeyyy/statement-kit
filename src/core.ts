@@ -1,7 +1,8 @@
 import { bankDisplayName, bankParsers } from './banks.js';
 import { StatementParseError } from './errors.js';
 import { Statement, StatementFailure } from './statement.js';
-import type { BankName, ParseResult, ParserName } from './types.js';
+import type { BankName, ParseResult, ParserName, TransactionFor } from './types.js';
+import type { ParseResult as ParserResult } from './parsers/types.js';
 import type { Item, Ruling } from './parsers/pdf-shared.js';
 import { genericParser } from './parsers/pdf-generic.js';
 import { genericLinesParser } from './parsers/pdf-generic-lines.js';
@@ -14,19 +15,37 @@ export function parsePages(bank: BankName | 'auto' | 'generic', pages: Item[][],
       if (bankParsers[name].detect(pages)) { selected = name; break; }
     }
   }
-  const parser = selected === 'generic'
-    ? (genericLinesParser.detect(pages, rulings) ? genericLinesParser : genericParser)
-    : bankParsers[selected];
-  const detected = selected === 'generic'
-    ? parser === genericLinesParser ? genericLinesParser.detect(pages, rulings) : genericParser.detect(pages)
-    : bankParsers[selected].detect(pages);
+  // Keep each literal ID paired with its parser's row type through construction.
+  switch (selected) {
+    case 'gtbank': return parseBank('gtbank', pages);
+    case 'zenith': return parseBank('zenith', pages);
+    case 'uba': return parseBank('uba', pages);
+    case 'cowrywise': return parseBank('cowrywise', pages);
+    case 'generic': {
+      const lined = genericLinesParser.detect(pages, rulings);
+      return statementResult('generic', lined || genericParser.detect(pages), () =>
+        lined ? genericLinesParser.parse(pages, rulings) : genericParser.parse(pages));
+    }
+  }
+}
+
+type ParserOutcome<B extends ParserName> =
+  | { data: Statement<TransactionFor<B>, B>; error: null }
+  | Extract<ParseResult, { error: StatementParseError }>;
+
+function parseBank<B extends BankName>(bank: B, pages: Item[][]): ParserOutcome<B> {
+  const parser = bankParsers[bank];
+  return statementResult(bank, parser.detect(pages), () => parser.parse(pages));
+}
+
+function statementResult<B extends ParserName>(
+  selected: B, detected: boolean, load: () => ParserResult<B>,
+): ParserOutcome<B> {
   if (!detected) {
     const error = new StatementParseError('unsupported_layout', `Could not recognize a supported ${bankDisplayName(selected)} layout.`);
     return { data: new StatementFailure(error, { bank: selected, bankName: bankDisplayName(selected) }), error };
   }
-  const raw = selected === 'generic'
-    ? parser === genericLinesParser ? genericLinesParser.parse(pages, rulings) : genericParser.parse(pages)
-    : bankParsers[selected].parse(pages);
+  const raw = load();
   const info = { ...raw.meta, bank: selected, bankName: bankDisplayName(selected) };
   if (raw.rows.length === 0) {
     const error = new StatementParseError('no_transactions', 'No readable transactions were found in the statement.');

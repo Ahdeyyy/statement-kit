@@ -158,7 +158,7 @@ type Anchor = {
 	fragments: { y: number; text: string }[];
 };
 
-function parseUba(pages: Item[][]): ParseResult {
+function parseUba(pages: Item[][]): ParseResult<'uba'> {
 	const warnings: string[] = [];
 	let meta: StatementMeta = {};
 	let columns: Columns | null = null;
@@ -252,7 +252,7 @@ function parseUba(pages: Item[][]): ParseResult {
 		meta.openingBalance = openingBalance;
 	}
 
-	const transactions: ParsedTransaction[] = anchors.map((a) => ({
+	const transactions: ParsedTransaction<'uba'>[] = anchors.map((a) => ({
 		date: a.date,
 		description: a.fragments
 			.sort((x, y) => y.y - x.y) // top-of-block first
@@ -279,7 +279,7 @@ function parseUba(pages: Item[][]): ParseResult {
 	return { rows: transactions, meta, warnings };
 }
 
-export const ubaParser: PdfStatementParser = {
+export const ubaParser: PdfStatementParser<'uba'> = {
 	name: 'uba',
 	detect: (pages) => {
 		const first = clusterRows(pages[0] ?? []);
