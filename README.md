@@ -60,8 +60,17 @@ const { parse, parseAsync } = require("@ahdeyy/statement-kit");
 | `zenith` | Zenith Bank | Date / Description / Debit / Credit / Value Date / Balance tables, including value dates joined to credit amounts and headers carried across pages. |
 | `uba` | United Bank for Africa (UBA) | Trans Date / Value Date / Narration / Debit / Credit / Balance tables, including split headers, summary pages, and wrapped narration. |
 | `cowrywise` | Cowrywise | Stash-style Amount / Fee / Type / Balance breakdowns with stacked direction, value, and date rows. Cowrywise is an investment platform; other product layouts are not guaranteed. |
+| `zap` | Zap by Paystack | Date / Description / Type / Source / Amount / Balance tables, signed amounts, wrapped descriptions, undated fees and stamp duty, and payments funded outside the wallet. |
 
 Names are case-insensitive and ignore spaces, hyphens, and punctuation. Aliases include `gtb`, `gt`, `guaranty-trust-bank`, `zenith-bank`, and `united-bank-for-africa`.
+
+Zap also accepts `zap-by-paystack`. Fees and stamp duty are separate debit
+transactions dated to their preceding payment. Payments funded from a bank
+account retain their signed amount and omit `balance` when no wallet balance
+is printed; they do not affect wallet balance reconciliation. Status badges,
+time of day, type, and funding source are not included in the transaction
+description. The partner bank printed in Zap's header does not change the
+institution ID from `zap`.
 
 ```ts
 import { supportedBanks } from "@ahdeyy/statement-kit";
@@ -174,7 +183,7 @@ A successful `data` value is an instance of the exported `Statement` class:
 
 - `amount` is signed: negative for debits/outflows, positive for credits/inflows. Amounts and balances are in major currency units, such as naira, not kobo.
 - `date` is a UTC timestamp in milliseconds. Numeric dates follow Nigeria's day-first convention, with month-first fallback when day-first is invalid.
-- Dedicated bank parsers always return `balance`. GTBank also returns an optional `reference`; Zenith, UBA, and Cowrywise do not expose a reference field. Generic extraction has optional `balance` and `reference` fields. Account metadata is optional except for `bank` and `bankName`; masked account numbers remain masked. `period` retains the printed text.
+- GTBank, Zenith, UBA, and Cowrywise always return `balance`. Zap has an optional `balance` because externally funded payments have no wallet balance. GTBank also returns an optional `reference`; Zenith, UBA, Cowrywise, and Zap do not expose a reference field. Generic extraction has optional `balance` and `reference` fields. Account metadata is optional except for `bank` and `bankName`; masked account numbers remain masked. `period` retains the printed text.
 - For Cowrywise, `amount` excludes the separately printed fee. A nonzero fee is included in the description, and the parser accounts for outflow fees when checking balances.
 - Transactions remain in statement order. Duplicate-looking rows are retained. Currency is read from the statement when available; it is not assumed to be NGN.
 - Metadata, transaction records, transaction arrays, and warnings are read-only snapshots. `toJSON()` returns independent mutable copies.
@@ -218,6 +227,8 @@ if (!error) {
     console.log(data.transactions[0].balance);   // number
   } else if (data.bank === "generic") {
     console.log(data.transactions[0].balance);   // number | undefined
+  } else if (data.bank === "zap") {
+    console.log(data.transactions[0].balance);   // number | undefined; reference is unavailable
   } else {
     console.log(data.transactions[0].balance);   // number; reference is unavailable
   }

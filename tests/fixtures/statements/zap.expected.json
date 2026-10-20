@@ -1,0 +1,157 @@
+{
+  "info": {
+    "bank": "zap",
+    "bankName": "Zap by Paystack",
+    "accountName": "NHQFSLG QENCBNU",
+    "accountNumber": "0294682084",
+    "currency": "NGN",
+    "openingBalance": 406180.36,
+    "period": "2 Jun 2034 - 29 Nov 2034"
+  },
+  "transactions": [
+    {
+      "date": 2033424000000,
+      "description": "Topup from EVXMWFC REVKPRN/Example Bank/NIP Transfer MFTCEHK...",
+      "amount": 10754.55,
+      "balance": 416934.91
+    },
+    {
+      "date": 2033769600000,
+      "description": "Transfer to PAUTKEW SQFNTJC - 384166519699500882191741130229 Purchase JBFBTBE...",
+      "amount": -2648.96,
+      "balance": 414285.95
+    },
+    {
+      "date": 2033769600000,
+      "description": "Fee - TRANSFER",
+      "amount": -25.2,
+      "balance": 414260.75
+    },
+    {
+      "date": 2033769600000,
+      "description": "Stamp Duty",
+      "amount": -83.57,
+      "balance": 414177.18
+    },
+    {
+      "date": 2034374400000,
+      "description": "Transfer to ZCVUZXT TJXRCKS - 292944466576034930383605124197 Purchase JLZWXUY...",
+      "amount": -20944.72,
+      "balance": 393232.46
+    },
+    {
+      "date": 2034374400000,
+      "description": "Fee - TRANSFER",
+      "amount": -38.64,
+      "balance": 393193.82
+    },
+    {
+      "date": 2034892800000,
+      "description": "Airtime-CUKHZJD",
+      "amount": -7790.1,
+      "balance": 385403.72
+    },
+    {
+      "date": 2034979200000,
+      "description": "Data-CLCDHAP",
+      "amount": -7844.82
+    },
+    {
+      "date": 2035411200000,
+      "description": "Topup from KBGHNNM DYRAFRT/Example Bank/NIP Transfer YWGJLQH...",
+      "amount": 3387.92,
+      "balance": 388791.64
+    },
+    {
+      "date": 2035756800000,
+      "description": "Data-GLRJQDM",
+      "amount": -29117.68,
+      "balance": 359673.96
+    },
+    {
+      "date": 2035843200000,
+      "description": "Transfer to RCRJATV VWYMEAZ - 858990913653639922515557069971 Purchase NHCKDPH...",
+      "amount": -16245.06,
+      "balance": 343428.9
+    },
+    {
+      "date": 2035843200000,
+      "description": "Fee - TRANSFER",
+      "amount": -48.48,
+      "balance": 343380.42
+    },
+    {
+      "date": 2036620800000,
+      "description": "Transfer to NVCTBUT RBRTHTP - 746131289551306863008915227827 Purchase CBMZYWB...",
+      "amount": -23101.27,
+      "balance": 320279.15
+    },
+    {
+      "date": 2036620800000,
+      "description": "Fee - TRANSFER",
+      "amount": -7.01,
+      "balance": 320272.14
+    },
+    {
+      "date": 2036880000000,
+      "description": "Transfer to JZPNYUL NLCXUGW - 884215335263164575738775265191 Purchase HYUTTSF...",
+      "amount": -28215.16,
+      "balance": 292056.98
+    },
+    {
+      "date": 2036880000000,
+      "description": "Fee - TRANSFER",
+      "amount": -33.41,
+      "balance": 292023.57
+    },
+    {
+      "date": 2036966400000,
+      "description": "Transfer to DYGFYSE CPCTAXN - 071871536361356956620160180747 Purchase WVSURWG...",
+      "amount": -29539.18,
+      "balance": 262484.39
+    },
+    {
+      "date": 2036966400000,
+      "description": "Fee - TRANSFER",
+      "amount": -16.93,
+      "balance": 262467.46
+    },
+    {
+      "date": 2037312000000,
+      "description": "Airtime-ATFAJDK",
+      "amount": -13155.53,
+      "balance": 249311.93
+    },
+    {
+      "date": 2037484800000,
+      "description": "Transfer to CPJXAVW MNFAXKU - 050015698292099406384936140729 Purchase QSSBPAP...",
+      "amount": -14166.16,
+      "balance": 235145.77
+    },
+    {
+      "date": 2037484800000,
+      "description": "Fee - TRANSFER",
+      "amount": -9.67,
+      "balance": 235136.1
+    },
+    {
+      "date": 2038262400000,
+      "description": "Topup from JDZLJME HWYWQQT/Example Bank/NIP Transfer SYSUMAU...",
+      "amount": 26572.75,
+      "balance": 261708.85
+    },
+    {
+      "date": 2038521600000,
+      "description": "Transfer to WNREMNM BUTMFKJ - 694926685020124949674661065698 Purchase LDRGUMV...",
+      "amount": -5590.7,
+      "balance": 256118.15
+    },
+    {
+      "date": 2038521600000,
+      "description": "Fee - TRANSFER",
+      "amount": -19.19,
+      "balance": 256098.96
+    }
+  ],
+  "warnings": []
+}

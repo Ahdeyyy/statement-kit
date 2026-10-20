@@ -11,7 +11,7 @@ export function parsePages(bank: BankName | 'auto' | 'generic', pages: Item[][],
   let selected: ParserName = bank === 'auto' ? 'generic' : bank;
   if (bank === 'auto') {
     // Try dedicated bank parsers in priority order before considering generic tables.
-    for (const name of ['zenith', 'cowrywise', 'uba', 'gtbank'] as const) {
+    for (const name of ['zenith', 'cowrywise', 'zap', 'uba', 'gtbank'] as const) {
       if (bankParsers[name].detect(pages)) { selected = name; break; }
     }
   }
@@ -21,6 +21,7 @@ export function parsePages(bank: BankName | 'auto' | 'generic', pages: Item[][],
     case 'zenith': return parseBank('zenith', pages);
     case 'uba': return parseBank('uba', pages);
     case 'cowrywise': return parseBank('cowrywise', pages);
+    case 'zap': return parseBank('zap', pages);
     case 'generic': {
       const lined = genericLinesParser.detect(pages, rulings);
       return statementResult('generic', lined || genericParser.detect(pages), () =>

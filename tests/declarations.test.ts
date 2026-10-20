@@ -27,6 +27,23 @@ test('published ESM, CommonJS and browser declarations infer bank-specific resul
         result.data.transactions[0].reference;
       }
       const promise: Promise<ParseResult<'cowrywise'>> = parseAsync('COWRYWISE', bytes);
+      const zap: ParseResult<'zap'> = parse('Zap by Paystack', bytes);
+      if (!zap.error) {
+        const bank: 'zap' = zap.data.bank;
+        const balance: number | undefined = zap.data.transactions[0].balance;
+        // @ts-expect-error External Zap payments omit the wallet balance.
+        const required: number = zap.data.toJSON().transactions[0].balance;
+        // @ts-expect-error Zap does not emit references.
+        zap.data.transactions[0].reference;
+      }
+      const zapPromise: Promise<ParseResult<'zap'>> = parseAsync('ZAP-BY-PAYSTACK', bytes);
+      if (!result.error && result.data.bank === 'zap') {
+        const balance: number | undefined = result.data.transactions[0].balance;
+        // @ts-expect-error Auto detection retains Zap's optional balance.
+        const required: number = result.data.transactions[0].balance;
+        // @ts-expect-error Auto detection retains Zap's unsupported reference.
+        result.data.transactions[0].reference;
+      }
       async function checkAsync() {
         const result = await promise;
         if (!result.error) {
@@ -39,6 +56,18 @@ test('published ESM, CommonJS and browser declarations infer bank-specific resul
     const browser = `
       import { parseAsync as parseBrowser, type ParseResult as BrowserResult } from '@ahdeyy/statement-kit/browser';
       const browserPromise: Promise<BrowserResult<'zenith'>> = parseBrowser('Zenith-Bank', bytes);
+      const zapBrowserPromise: Promise<BrowserResult<'zap'>> = parseBrowser('Zap by Paystack', bytes);
+      async function checkZapBrowser() {
+        const { data, error } = await zapBrowserPromise;
+        if (!error) {
+          const bank: 'zap' = data.info.bank;
+          const balance: number | undefined = data.toJSON().transactions[0].balance;
+          // @ts-expect-error External Zap payments omit the wallet balance.
+          const required: number = data.transactions[0].balance;
+          // @ts-expect-error Zap does not emit references.
+          data.transactions[0].reference;
+        }
+      }
       async function checkBrowser() {
         const { data, error } = await browserPromise;
         if (!error) {

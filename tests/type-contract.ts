@@ -92,6 +92,21 @@ export function checkExplicitBanks(source: Uint8Array): void {
     // @ts-expect-error Generic extraction cannot promise a balance column.
     accepts<number>(generic.data.transactions[0].balance);
   }
+
+  const zap = parse('zap', source);
+  sameType<Equal<typeof zap, ParseResult<'zap'>>>();
+  if (!zap.error) {
+    accepts<'zap'>(zap.data.bank);
+    accepts<'zap'>(zap.data.info.bank);
+    accepts<number | undefined>(zap.data.transactions[0].balance);
+    accepts<number | undefined>(zap.data.toJSON().transactions[0].balance);
+    // @ts-expect-error Externally funded Zap payments do not have a wallet balance.
+    accepts<number>(zap.data.transactions[0].balance);
+    // @ts-expect-error Zap does not emit references.
+    zap.data.transactions[0].reference;
+    // @ts-expect-error JSON snapshots retain the Zap row shape.
+    zap.data.toJSON().transactions[0].reference;
+  }
 }
 
 export function checkAliases(source: Uint8Array): void {
@@ -103,6 +118,8 @@ export function checkAliases(source: Uint8Array): void {
   accepts<ParseResult<'zenith'>>(parse('Zenith-Bank', source));
   accepts<ParseResult<'uba'>>(parse('United Bank for Africa', source));
   accepts<ParseResult<'cowrywise'>>(parse('COWRYWISE', source));
+  sameType<Equal<ResolvedParser<'Zap by Paystack'>, 'zap'>>();
+  accepts<ParseResult<'zap'>>(parse('Zap-by-Paystack', source));
   accepts<ParseResult<'generic'>>(parse('GENERIC', source));
   sameType<Equal<ResolvedParser<'AUTO'>, ParserName>>();
   sameType<Equal<ResolvedParser<'unknown-bank'>, ParserName>>();
@@ -146,6 +163,14 @@ export function checkDetectionAndDynamicInputs(source: Uint8Array, bank: string,
       accepts<number | undefined>(data.transactions[0].balance);
       accepts<string | undefined>(data.transactions[0].reference);
       break;
+    case 'zap':
+      accepts<'zap'>(data.toJSON().info.bank);
+      accepts<number | undefined>(data.transactions[0].balance);
+      // @ts-expect-error Auto detection must retain Zap's optional balance.
+      accepts<number>(data.transactions[0].balance);
+      // @ts-expect-error Zap does not emit references.
+      data.transactions[0].reference;
+      break;
     default:
       accepts<never>(data);
   }
@@ -174,6 +199,11 @@ function wrappedParse<B extends ParserInput>(bank: B, source: Uint8Array): Parse
 }
 
 export async function checkAsyncEntries(source: Uint8Array): Promise<void> {
+  const zapNode = await parseAsync('Zap by Paystack', source);
+  const zapBrowser = await parseBrowser('ZAP-BY-PAYSTACK', source);
+  sameType<Equal<typeof zapNode, ParseResult<'zap'>>>();
+  sameType<Equal<typeof zapBrowser, BrowserResult<'zap'>>>();
+  sameType<Equal<BrowserTransactionFor<'zap'>, TransactionFor<'zap'>>>();
   const node = await parseAsync('United-Bank-for-Africa', source);
   const browser = await parseBrowser('United-Bank-for-Africa', new Blob([Uint8Array.from(source)]));
   sameType<Equal<typeof node, ParseResult<'uba'>>>();
@@ -200,7 +230,11 @@ export async function checkAsyncEntries(source: Uint8Array): Promise<void> {
 export function checkParserRowContracts(): void {
   const base = { date: 0, description: '', amount: 0 };
   accepts<TransactionFor<'generic'>>(base);
-  // @ts-expect-error Dedicated parser rows must always carry a balance.
+  accepts<TransactionFor<'zap'>>(base);
+  accepts<TransactionFor<'zap'>>({ ...base, balance: 0 });
+  // @ts-expect-error Zap does not return a reference field.
+  accepts<TransactionFor<'zap'>>({ ...base, reference: 'REF' });
+  // @ts-expect-error GTBank rows must always carry a balance.
   accepts<TransactionFor<'gtbank'>>(base);
   accepts<TransactionFor<'gtbank'>>({ ...base, balance: 0, reference: 'REF' });
   // @ts-expect-error UBA does not return a reference field.

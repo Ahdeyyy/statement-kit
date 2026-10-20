@@ -8,6 +8,7 @@ import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import type { StatementInfo, Transaction, BankName } from '../src/types.js';
 import { makePdf, type FixtureText } from '../tests/fixtures/pdf.js';
+import { drawZapFixture } from './zap-fixture.js';
 
 const output = fileURLToPath(new URL('../tests/fixtures/statements/', import.meta.url));
 const seedArgument = process.argv.indexOf('--seed');
@@ -16,7 +17,7 @@ if (!Number.isSafeInteger(baseSeed) || baseSeed < 0 || baseSeed > 0xffffffff) {
   throw new Error('--seed must be an unsigned 32-bit integer.');
 }
 
-type Layout = 'gtbank-rotated' | 'gtbank-short' | 'gtbank-landscape' | 'uba' | 'zenith';
+type Layout = 'gtbank-rotated' | 'gtbank-short' | 'gtbank-landscape' | 'uba' | 'zenith' | 'zap';
 type Spec = { id: Layout; bank: BankName; pages: number; rows: number; size: [number, number]; rotation: 0 | 90; features: string[] };
 const specs: Spec[] = [
   { id: 'gtbank-rotated', bank: 'gtbank', pages: 98, rows: 1097, size: [595, 842], rotation: 90,
@@ -29,6 +30,8 @@ const specs: Spec[] = [
     features: ['summary-only first page', 'three-row table header', 'masked account', 'centered narration', 'drawn table borders'] },
   { id: 'zenith', bank: 'zenith', pages: 13, rows: 465, size: [595, 842], rotation: 0,
     features: ['first-page-only header', 'credit and value date in one text run', 'zero-valued unused columns', 'wrapped descriptions'] },
+  { id: 'zap', bank: 'zap', pages: 2, rows: 24, size: [595.91998, 842.88], rotation: 0,
+    features: ['signed amounts', 'undated fees and stamp duty', 'external payment without wallet balance', 'repeated account and table headers', 'wrapped descriptions and type', 'naira currency symbol'] },
 ];
 
 // Seeded randomness makes failures reproducible; changing --seed changes every dataset.
@@ -313,7 +316,7 @@ mkdirSync(output, { recursive: true });
 const manifest: ManifestEntry[] = [];
 for (const [index, spec] of specs.entries()) {
   const seed = (baseSeed + Math.imul(index + 1, 0x9e3779b9)) >>> 0;
-  const { pdf, expected } = drawFixture(spec, seed);
+  const { pdf, expected } = spec.id === 'zap' ? drawZapFixture(seed) : drawFixture(spec, seed);
   const expectedText = JSON.stringify(expected, null, 2) + '\n';
   const pdfName = `${spec.id}.pdf`;
   const expectedName = `${spec.id}.expected.json`;

@@ -91,6 +91,10 @@ export type PdfFixtureOptions = {
 
 export function makePdf(pages: FixtureText[][], options: PdfFixtureOptions = {}): Buffer {
   const objects: Buffer[] = [];
+  // A tiny vector font keeps the naira symbol visible and text-extractable
+  // without copying fonts or any objects from a customer's PDF.
+  const naira = pages.some((page) => page.some((item) => item.text.includes('\u20a6')));
+  const nairaFontId = 4 + pages.length * 2;
   const id = Buffer.from('00112233445566778899aabbccddeeff', 'hex');
   let key: Buffer | undefined;
   let encryption = '';
@@ -109,11 +113,13 @@ export function makePdf(pages: FixtureText[][], options: PdfFixtureOptions = {})
   for (const [pageIndex, page] of pages.entries()) {
     const contentId = objects.length + 2;
     const [pageWidth, pageHeight] = options.pageSize ?? [800, 900];
-    add(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidth} ${pageHeight}] ${options.rotate ? '/Rotate 90' : ''} /Resources << /Font << /F1 3 0 R >> >> /Contents ${contentId} 0 R >>`);
+    add(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidth} ${pageHeight}] ${options.rotate ? '/Rotate 90' : ''} /Resources << /Font << /F1 3 0 R${naira ? ` /F2 ${nairaFontId} 0 R` : ''} >> >> /Contents ${contentId} 0 R >>`);
     let content = page.map((item) => {
       const escaped = item.text.replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
       const matrix = options.rotate ? `0 1 -1 0 ${(options.pageSize?.[0] ?? 900) - item.y} ${item.x}` : `1 0 0 1 ${item.x} ${item.y}`;
-      return `BT /F1 ${item.fontSize ?? 6} Tf ${matrix} Tm (${escaped}) Tj ET`;
+      const size = item.fontSize ?? 6;
+      const runs = escaped.split('\u20a6').map((part) => `(${part}) Tj`).join(` /F2 ${size} Tf (\\200) Tj /F1 ${size} Tf `);
+      return `BT /F1 ${size} Tf ${matrix} Tm ${runs} ET`;
     }).join('\n');
     // Furniture is expressed in upright coordinates, like the text above.
     const furniture = (options.pageCommands?.[pageIndex] ?? []).join('\n');
@@ -129,6 +135,14 @@ export function makePdf(pages: FixtureText[][], options: PdfFixtureOptions = {})
       stream = rc4(md5(Buffer.concat([key, objectId])).subarray(0, 10), stream);
     }
     add(Buffer.concat([Buffer.from(`<< /Length ${stream.length} >>\nstream\n`), stream, Buffer.from('\nendstream')]));
+  }
+  if (naira) {
+    if (key) throw new Error('Naira fixture font does not support encrypted test PDFs.');
+    add(`<< /Type /Font /Subtype /Type3 /FontBBox [0 -100 600 800] /FontMatrix [0.001 0 0 0.001 0 0] /CharProcs << /naira ${nairaFontId + 1} 0 R >> /Encoding << /Type /Encoding /Differences [128 /naira] >> /FirstChar 128 /LastChar 128 /Widths [600] /Resources << >> /ToUnicode ${nairaFontId + 2} 0 R >>`);
+    const glyph = '600 0 0 -100 600 800 d1 45 w 100 0 m 100 700 l 500 0 l 500 700 l S 30 290 m 570 290 l 30 410 m 570 410 l S';
+    add(`<< /Length ${glyph.length} >>\nstream\n${glyph}\nendstream`);
+    const cmap = '/CIDInit /ProcSet findresource begin 12 dict begin begincmap /CIDSystemInfo << /Registry (Adobe) /Ordering (UCS) /Supplement 0 >> def /CMapName /NairaUnicode def /CMapType 2 def 1 begincodespacerange <00> <FF> endcodespacerange 1 beginbfchar <80> <20A6> endbfchar endcmap CMapName currentdict /CMap defineresource pop end end';
+    add(`<< /Length ${cmap.length} >>\nstream\n${cmap}\nendstream`);
   }
   if (key) add(encryption);
   const chunks = [Buffer.from('%PDF-1.4\n')];

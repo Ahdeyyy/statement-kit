@@ -68,6 +68,7 @@ export function parse(bank: string, source: StatementSource, options: ParseOptio
       case 'zenith': return { data: new Statement(result.data.info, result.data.transactions, result.data.warnings), error: null };
       case 'uba': return { data: new Statement(result.data.info, result.data.transactions, result.data.warnings), error: null };
       case 'cowrywise': return { data: new Statement(result.data.info, result.data.transactions, result.data.warnings), error: null };
+      case 'zap': return { data: new Statement(result.data.info, result.data.transactions, result.data.warnings), error: null };
       case 'generic': return { data: new Statement(result.data.info, result.data.transactions, result.data.warnings), error: null };
     }
   } catch (error) {

@@ -2,7 +2,7 @@ import type { Statement, StatementFailure } from './statement.js';
 import type { StatementParseError } from './errors.js';
 import type { bankAliases } from './banks.js';
 
-export type BankName = 'gtbank' | 'zenith' | 'uba' | 'cowrywise';
+export type BankName = 'gtbank' | 'zenith' | 'uba' | 'cowrywise' | 'zap';
 export type ParserName = BankName | 'generic';
 /** Canonical IDs are suggested by editors; aliases and runtime strings remain accepted. */
 export type ParserInput = ParserName | 'auto' | (string & {});
@@ -49,13 +49,13 @@ export type Transaction = {
   description: string;
   /** Major currency units. Negative = debit; positive = credit. */
   amount: number;
-  /** Running balance, when available. Dedicated bank parser results require this field. */
+  /** Running balance, when available. Zap and generic results may omit this field. */
   balance?: number;
   /** Printed reference. Currently emitted by GTBank and generic extraction only. */
   reference?: string;
 };
 
-/** Dedicated parsers only emit rows with a readable running balance. */
+/** Row shape for parsers that only emit rows with a readable running balance. */
 type BalancedTransaction = Omit<Transaction, 'balance' | 'reference'> & {
   /** Running balance in major currency units; always present on this parser's rows. */
   balance: number;
@@ -70,6 +70,8 @@ export type TransactionByParser = {
   zenith: BalancedTransaction;
   uba: BalancedTransaction;
   cowrywise: BalancedTransaction;
+  /** Externally funded payments have no wallet balance; Zap does not emit references. */
+  zap: Omit<Transaction, 'reference'>;
   generic: Transaction;
 };
 

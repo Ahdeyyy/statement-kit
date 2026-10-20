@@ -10,6 +10,7 @@ import { zenithParser } from './pdf-zenith.js';
 import { gtbankParser } from './pdf-gtbank.js';
 import { cowrywiseParser } from './pdf-cowrywise.js';
 import { ubaParser } from './pdf-uba.js';
+import { zapParser } from './pdf-zap.js';
 import { genericParser } from './pdf-generic.js';
 import { genericLinesParser } from './pdf-generic-lines.js';
 
@@ -20,7 +21,7 @@ export { normalizeRotation, normalizeRulings, type Item, type Ruling } from './p
 // first. The two layout-agnostic generic parsers are the fallback: the
 // line/lattice one is preferred when the page actually draws its table borders
 // (more reliable than gutter inference), with the text/gutter one behind it.
-const TUNED = [zenithParser, cowrywiseParser, ubaParser, gtbankParser];
+const TUNED = [zenithParser, cowrywiseParser, zapParser, ubaParser, gtbankParser];
 
 /**
  * @param opts.rulings vector ruling lines per page (index-aligned with `pages`),
