@@ -86,7 +86,7 @@ export function matchHeader(cells: string[]): ColumnMap | null {
 	return found as ColumnMap;
 }
 
-export function extractFromGrid(grid: string[][]): ParseResult {
+export function extractFromGrid(grid: string[][]): ParseResult<'generic'> {
 	const warnings: string[] = [];
 
 	let columns: ColumnMap | null = null;
@@ -106,7 +106,7 @@ export function extractFromGrid(grid: string[][]): ParseResult {
 		};
 	}
 
-	const rows: ParsedTransaction[] = [];
+	const rows: ParsedTransaction<'generic'>[] = [];
 	for (let i = headerRow + 1; i < grid.length; i++) {
 		const cells = grid[i];
 		const cell = (index: number | undefined) =>

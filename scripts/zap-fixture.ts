@@ -1,6 +1,8 @@
 // Draw a fresh Zap-shaped statement. No source file or customer data is read.
 import { makePdf, type FixtureText } from '../tests/fixtures/pdf.js';
-import type { StatementInfo, Transaction } from '../src/types.js';
+import type { StatementInfo, TransactionFor } from '../src/types.js';
+
+type Transaction = TransactionFor<'zap'>;
 
 export function drawZapFixture(seed: number) {
   let state = seed >>> 0;
@@ -18,7 +20,7 @@ export function drawZapFixture(seed: number) {
   const start = Date.UTC(choose(2030, 2038), choose(0, 5), choose(1, 15));
   const period = `${periodDate(start)} - ${periodDate(start + 180 * 86400000)}`;
   const opening = choose(40_000_000, 80_000_000);
-  const info: StatementInfo = { bank: 'zap', bankName: 'Zap by Paystack', accountName: `${token()} ${token()}`,
+  const info: StatementInfo<'zap'> = { bank: 'zap', bankName: 'Zap by Paystack', accountName: `${token()} ${token()}`,
     accountNumber: digits(10), currency: 'NGN', openingBalance: opening / 100, period };
   let balance = opening;
   let date = start;

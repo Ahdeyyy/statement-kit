@@ -6,6 +6,7 @@
 // in a shared routine.
 
 import type { ParseResult } from './types.js';
+import type { ParserName } from '../types.js';
 
 export type Item = { text: string; x: number; y: number; width: number };
 export type VisualRow = { y: number; items: Item[] };
@@ -27,11 +28,11 @@ export const Y_TOLERANCE = 3;
  * `parse` then turns the pages into transactions. Parsers should be cheap and
  * side-effect free so the dispatcher can try several in turn.
  */
-export type PdfStatementParser = {
+export type PdfStatementParser<B extends ParserName = ParserName> = {
 	/** Human-readable bank/layout name, for diagnostics. */
-	name: string;
+	name: B;
 	detect: (pages: Item[][]) => boolean;
-	parse: (pages: Item[][]) => ParseResult;
+	parse: (pages: Item[][]) => ParseResult<B>;
 };
 
 /**
@@ -43,7 +44,7 @@ export type PdfStatementParser = {
 export type LinedPdfStatementParser = {
 	name: string;
 	detect: (pages: Item[][], rulings: Ruling[][]) => boolean;
-	parse: (pages: Item[][], rulings: Ruling[][]) => ParseResult;
+	parse: (pages: Item[][], rulings: Ruling[][]) => ParseResult<'generic'>;
 };
 
 /**

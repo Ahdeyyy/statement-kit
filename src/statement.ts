@@ -1,18 +1,23 @@
 import type { StatementParseError } from './errors.js';
-import type { ExportOptions, StatementInfo, Transaction } from './types.js';
+import type { ExportOptions, ParserName, StatementInfo, Transaction } from './types.js';
 
 const HEADERS = ['date', 'description', 'amount', 'balance', 'reference'];
 
-export class Statement {
+export class Statement<Row extends Transaction = Transaction, Bank extends ParserName = ParserName> {
   readonly status = 'success' as const;
-  readonly info: Readonly<StatementInfo>;
-  readonly transactions: readonly Readonly<Transaction>[];
+  readonly info: Readonly<StatementInfo<Bank>>;
+  readonly transactions: readonly Readonly<Row>[];
   readonly warnings: readonly string[];
 
-  constructor(info: StatementInfo, transactions: readonly Transaction[], warnings: readonly string[] = []) {
+  constructor(info: StatementInfo<Bank>, transactions: readonly Row[], warnings: readonly string[] = []) {
     this.info = Object.freeze({ ...info });
     this.transactions = Object.freeze(transactions.map((row) => Object.freeze({ ...row })));
     this.warnings = Object.freeze([...warnings]);
+  }
+
+  /** Canonical parser ID. Check this property to narrow auto-detected statement rows. */
+  get bank(): Bank {
+    return this.info.bank;
   }
 
   toCSV(options: ExportOptions = {}): string {
@@ -47,7 +52,7 @@ export class Statement {
   }
 
   /** A plain snapshot, also used by JSON.stringify(statement). */
-  toJSON(): { info: StatementInfo; transactions: Transaction[]; warnings: string[] } {
+  toJSON(): { info: StatementInfo<Bank>; transactions: Row[]; warnings: string[] } {
     return {
       info: { ...this.info },
       transactions: this.transactions.map((row) => ({ ...row })),

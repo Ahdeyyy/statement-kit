@@ -178,7 +178,7 @@ type Anchor = {
 	remarkParts: (Fragment & { page: number })[];
 };
 
-function parseGtbank(pages: Item[][]): ParseResult {
+function parseGtbank(pages: Item[][]): ParseResult<'gtbank'> {
 	const warnings: string[] = [];
 	let meta: StatementMeta = {};
 	let columns: Columns | null = null;
@@ -503,7 +503,7 @@ function parseGtbank(pages: Item[][]): ParseResult {
 	anchors.push(...merged);
 
 	// Resolve signs: balance delta first, column position as fallback.
-	const transactions: ParsedTransaction[] = [];
+	const transactions: ParsedTransaction<'gtbank'>[] = [];
 	let previousBalance = meta.openingBalance ?? null;
 	const midpoint = (columns.debitRight + columns.creditRight) / 2;
 
@@ -558,7 +558,7 @@ function parseGtbank(pages: Item[][]): ParseResult {
 	return { rows: transactions, meta, warnings };
 }
 
-export const gtbankParser: PdfStatementParser = {
+export const gtbankParser: PdfStatementParser<'gtbank'> = {
 	name: 'gtbank',
 	// Recognises any statement with a Debit(s)/Credit(s)/Balance table. Also the
 	// dispatcher's fallback, so this parser runs even when detection is uncertain.

@@ -112,7 +112,7 @@ function bucket(row: VisualRow, cols: Columns): RowCells {
 	return parts;
 }
 
-function parseZenith(pages: Item[][]): ParseResult {
+function parseZenith(pages: Item[][]): ParseResult<'zenith'> {
 	const warnings: string[] = [];
 	let meta: StatementMeta = {};
 	let columns: Columns | null = null;
@@ -209,7 +209,7 @@ function parseZenith(pages: Item[][]): ParseResult {
 		};
 	}
 
-	const transactions: ParsedTransaction[] = anchors.map((a) => ({
+	const transactions: ParsedTransaction<'zenith'>[] = anchors.map((a) => ({
 		date: a.date,
 		description: a.descriptionParts.join(' ').replace(/\s+/g, ' ').trim(),
 		amount: a.amount,
@@ -232,7 +232,7 @@ function parseZenith(pages: Item[][]): ParseResult {
 	return { rows: transactions, meta, warnings };
 }
 
-export const zenithParser: PdfStatementParser = {
+export const zenithParser: PdfStatementParser<'zenith'> = {
 	name: 'zenith',
 	detect: (pages) => {
 		const first = clusterRows(pages[0] ?? []);

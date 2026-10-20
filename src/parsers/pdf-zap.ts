@@ -43,13 +43,13 @@ function metadata(rows: VisualRow[]): StatementMeta {
   return meta;
 }
 
-function parseZap(pages: Item[][]): ParseResult {
+function parseZap(pages: Item[][]): ParseResult<'zap'> {
   const meta = metadata(clusterRows(pages[0] ?? []));
-  const rows: ParsedTransaction[] = [];
+  const rows: ParsedTransaction<'zap'>[] = [];
   const warnings: string[] = [];
   let columns: ReturnType<typeof header> = null;
   let date: number | null = null;
-  let pending: ParsedTransaction | null = null;
+  let pending: ParsedTransaction<'zap'> | null = null;
   let balance = meta.openingBalance;
   let mismatches = 0;
   const flush = () => {
@@ -111,7 +111,7 @@ function parseZap(pages: Item[][]): ParseResult {
   return { rows, meta, warnings };
 }
 
-export const zapParser: PdfStatementParser = {
+export const zapParser: PdfStatementParser<'zap'> = {
   name: 'zap',
   detect: (pages) => {
     const rows = clusterRows(pages[0] ?? []);

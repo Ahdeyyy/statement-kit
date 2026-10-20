@@ -20,7 +20,7 @@ import { extractFromGrid } from './grid.js';
 import { extractTableByLines, hasLineHeader } from './pdf-table-lines.js';
 import { extractMeta } from './pdf-generic.js';
 
-function parseGenericLines(pages: Item[][], rulings: Ruling[][]): ParseResult {
+function parseGenericLines(pages: Item[][], rulings: Ruling[][]): ParseResult<'generic'> {
 	const { grid } = extractTableByLines(pages, rulings);
 	const result = extractFromGrid(grid);
 	const meta = pages.length > 0 ? extractMeta(pageText(clusterRows(pages[0]))) : {};

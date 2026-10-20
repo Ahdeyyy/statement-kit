@@ -53,6 +53,7 @@ describe('browser entry point', () => {
       const expected = success(await parseNode(bank, pdf));
       const result = await browser.parseAsync('auto', new File([pdf], `${bank}.pdf`));
       expect(result.error).toBeNull();
+      expect(success(result).bank).toBe(bank);
       expect(success(result).toJSON()).toEqual(expected.toJSON());
     }
     const pdf = Uint8Array.from(makePdf(layouts.generic, { borders: true }));

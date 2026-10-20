@@ -117,7 +117,7 @@ type Anchor = {
 	direction: 'inflow' | 'outflow' | null;
 };
 
-function parseCowrywise(pages: Item[][]): ParseResult {
+function parseCowrywise(pages: Item[][]): ParseResult<'cowrywise'> {
 	const warnings: string[] = [];
 	let meta: StatementMeta = {};
 	let columns: Columns | null = null;
@@ -195,7 +195,7 @@ function parseCowrywise(pages: Item[][]): ParseResult {
 		};
 	}
 
-	const transactions: ParsedTransaction[] = [];
+	const transactions: ParsedTransaction<'cowrywise'>[] = [];
 	for (const a of anchors) {
 		if (a.date === null) {
 			warnings.push(`Skipped a ${a.type || 'transaction'} row with no date.`);
@@ -229,7 +229,7 @@ function parseCowrywise(pages: Item[][]): ParseResult {
 	return { rows: transactions, meta, warnings };
 }
 
-export const cowrywiseParser: PdfStatementParser = {
+export const cowrywiseParser: PdfStatementParser<'cowrywise'> = {
 	name: 'cowrywise',
 	// Require both the Cowrywise branding and this breakdown header so other
 	// Cowrywise products' statements aren't misrouted here.
