@@ -27,14 +27,14 @@ export function extractMeta(text: string): StatementMeta {
 	return meta;
 }
 
-function parseGeneric(pages: Item[][]): ParseResult {
+function parseGeneric(pages: Item[][]): ParseResult<'generic'> {
 	const { grid } = extractTable(pages);
 	const result = extractFromGrid(grid);
 	const meta = pages.length > 0 ? extractMeta(pageText(clusterRows(pages[0]))) : {};
 	return { ...result, meta: { ...meta, ...result.meta } };
 }
 
-export const genericParser: PdfStatementParser = {
+export const genericParser: PdfStatementParser<'generic'> = {
 	name: 'generic',
 	detect: (pages) => findHeaderColumns(clusterRows(pages[0] ?? [])) !== null,
 	parse: parseGeneric

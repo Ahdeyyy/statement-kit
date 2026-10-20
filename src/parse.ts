@@ -6,7 +6,10 @@ import { resolveBank } from './banks.js';
 import { StatementParseError } from './errors.js';
 import { Statement, StatementFailure } from './statement.js';
 import { binary, failure, parseSource, readBinary, validateOptions } from './parse-shared.js';
-import type { AsyncStatementSource, ParseOptions, ParseResult, StatementSource } from './types.js';
+import type { WorkerResult } from './pdf-worker.js';
+import type {
+  AsyncStatementSource, ParseOptions, ParseResult, ParserInput, ResolvedParser, StatementSource,
+} from './types.js';
 
 function validateSource(source: StatementSource): void {
   if (typeof source === 'string') {
@@ -20,7 +23,13 @@ function validateSource(source: StatementSource): void {
   }
 }
 
-/** Parse without throwing or returning a promise. Requires child-process support. */
+/**
+ * Parse without throwing or returning a promise. Requires child-process support.
+ * Literal bank names and aliases infer row fields. After success, check data.bank to narrow auto results.
+ */
+export function parse<B extends ParserInput>(
+  bank: B, source: StatementSource, options?: ParseOptions,
+): ParseResult<ResolvedParser<B>>;
 export function parse(bank: string, source: StatementSource, options: ParseOptions = {}): ParseResult {
   try {
     const selected = resolveBank(bank);
@@ -48,18 +57,31 @@ export function parse(bank: string, source: StatementSource, options: ParseOptio
     if (child.status !== 0 || !child.stdout) {
       throw new StatementParseError('parse_failed', 'The PDF parsing process could not complete.');
     }
-    const result = JSON.parse(child.stdout) as ParseResult;
+    const result = JSON.parse(child.stdout) as WorkerResult;
     if (result.error) {
       const error = new StatementParseError(result.error.code, result.error.message);
       return { data: new StatementFailure(error, result.data.info, result.data.warnings), error };
     }
-    return { data: new Statement(result.data.info, result.data.transactions, result.data.warnings), error: null };
+    // Rehydrate the worker's JSON while retaining the parser/row association.
+    switch (result.bank) {
+      case 'gtbank': return { data: new Statement(result.data.info, result.data.transactions, result.data.warnings), error: null };
+      case 'zenith': return { data: new Statement(result.data.info, result.data.transactions, result.data.warnings), error: null };
+      case 'uba': return { data: new Statement(result.data.info, result.data.transactions, result.data.warnings), error: null };
+      case 'cowrywise': return { data: new Statement(result.data.info, result.data.transactions, result.data.warnings), error: null };
+      case 'generic': return { data: new Statement(result.data.info, result.data.transactions, result.data.warnings), error: null };
+    }
   } catch (error) {
     return failure(error);
   }
 }
 
-/** Parse in the current process. All input, PDF and parser failures are returned. */
+/**
+ * Parse in the current process. All input, PDF and parser failures are returned.
+ * Literal bank names and aliases infer row fields. After success, check data.bank to narrow auto results.
+ */
+export function parseAsync<B extends ParserInput>(
+  bank: B, source: AsyncStatementSource, options?: ParseOptions,
+): Promise<ParseResult<ResolvedParser<B>>>;
 export function parseAsync(bank: string, source: AsyncStatementSource, options: ParseOptions = {}): Promise<ParseResult> {
   return parseSource(bank, source, options, async (input) => {
     if (typeof input === 'string' || input instanceof URL) {

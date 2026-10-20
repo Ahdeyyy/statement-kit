@@ -50,6 +50,27 @@ describe('public parser API', () => {
     });
   }
 
+  test('bank discriminator and row contracts survive async parsing and worker rehydration', async () => {
+    for (const bank of ['gtbank', 'zenith', 'uba', 'cowrywise', 'generic'] as const) {
+      const pdf = makePdf(layouts[bank]);
+      for (const parser of [parse, parseAsync]) {
+        const result = await parser(bank, pdf);
+        expect(result.error).toBeNull();
+        if (result.error) throw result.error;
+        expect(result.data.bank).toBe(bank);
+        expect(result.data.bank).toBe(result.data.info.bank);
+        if (bank !== 'generic') {
+          expect(result.data.transactions.every((row) => typeof row.balance === 'number')).toBe(true);
+          expect(result.data.transactions.every((row) => 'reference' in row)).toBe(bank === 'gtbank');
+        }
+        // The bank getter does not add a column to the existing serialized format.
+        expect(Object.keys(result.data.toJSON())).toEqual(['info', 'transactions', 'warnings']);
+        expect(JSON.parse(JSON.stringify(result.data))).toEqual(result.data.toJSON());
+        expect(result.data.toCSV().split('\r\n')[0]).toBe('date,description,amount,balance,reference');
+      }
+    }
+  });
+
   test('supports file URLs, paths, buffers, views and ArrayBuffers without mutating bytes', async () => {
     const bytes = makePdf(layouts.gtbank);
     const before = Buffer.from(bytes);

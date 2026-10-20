@@ -174,10 +174,73 @@ A successful `data` value is an instance of the exported `Statement` class:
 
 - `amount` is signed: negative for debits/outflows, positive for credits/inflows. Amounts and balances are in major currency units, such as naira, not kobo.
 - `date` is a UTC timestamp in milliseconds. Numeric dates follow Nigeria's day-first convention, with month-first fallback when day-first is invalid.
-- `balance` and `reference` are optional. Account metadata is optional except for `bank` and `bankName`; masked account numbers remain masked. `period` retains the printed text.
+- Dedicated bank parsers always return `balance`. GTBank also returns an optional `reference`; Zenith, UBA, and Cowrywise do not expose a reference field. Generic extraction has optional `balance` and `reference` fields. Account metadata is optional except for `bank` and `bankName`; masked account numbers remain masked. `period` retains the printed text.
 - For Cowrywise, `amount` excludes the separately printed fee. A nonzero fee is included in the description, and the parser accounts for outflow fees when checking balances.
 - Transactions remain in statement order. Duplicate-looking rows are retained. Currency is read from the statement when available; it is not assumed to be NGN.
 - Metadata, transaction records, transaction arrays, and warnings are read-only snapshots. `toJSON()` returns independent mutable copies.
+
+## Bank-aware TypeScript
+
+Bank names determine the returned transaction fields automatically. No explicit type arguments or casts are needed. This works with `parse()`, Node `parseAsync()`, and browser `parseAsync()`.
+
+```ts
+import { parse } from "@ahdeyy/statement-kit";
+
+const { data, error } = parse("gtbank", "statement.pdf");
+if (!error) {
+  data.bank;                                // "gtbank"
+  data.info.bank;                           // "gtbank"
+  data.transactions[0].balance.toFixed(2);    // balance: number
+  data.transactions[0].reference?.trim();    // reference: string | undefined
+
+  const snapshot = data.toJSON();
+  snapshot.transactions[0].balance = 0;      // Independent, mutable, and still bank-specific.
+}
+
+const uba = parse("uba", "statement.pdf");
+if (!uba.error) {
+  uba.data.transactions[0].balance.toFixed(2);
+  // uba.data.transactions[0].reference;    // Type error: UBA does not emit this field.
+}
+```
+
+Editors suggest canonical parser IDs at the first argument and the appropriate fields on transaction rows. Literal aliases such as `"GTB"`, `"Guaranty-Trust Bank"`, and `"Zenith-Bank"` retain the same precise result types as their canonical IDs. A missing GTBank reference remains optional; an unsupported UBA reference is absent from the row type. The types describe fields the parser actually returns: Cowrywise fees remain part of `description`, and value dates and originating branches are not separate returned fields.
+
+For `"auto"` or a bank name stored as a general `string`, check `data.bank` after checking `error`:
+
+```ts
+import { parseAsync } from "@ahdeyy/statement-kit";
+
+const { data, error } = await parseAsync("auto", "statement.pdf");
+if (!error) {
+  if (data.bank === "gtbank") {
+    console.log(data.transactions[0].reference); // string | undefined
+    console.log(data.transactions[0].balance);   // number
+  } else if (data.bank === "generic") {
+    console.log(data.transactions[0].balance);   // number | undefined
+  } else {
+    console.log(data.transactions[0].balance);   // number; reference is unavailable
+  }
+}
+```
+
+`data.bank` is a read-only getter for `data.info.bank`. Use the top-level getter to narrow the entire statement, since checking the nested `data.info.bank` does not narrow its sibling transaction array. Narrow before calling `toJSON()` to retain the selected bank's snapshot type. JSON output still contains only `info`, `transactions`, and `warnings`; delimited exports keep their fixed five-column format.
+
+For reusable annotations, the following types are exported from both entry points:
+
+```ts
+import type { TransactionFor, StatementFor, ParseResult } from "@ahdeyy/statement-kit";
+
+type GtbankRow = TransactionFor<"gtbank">;
+type UbaStatement = StatementFor<"uba">;
+type ZenithResult = ParseResult<"zenith">;
+
+function summarize(statement: StatementFor<"uba">): number[] {
+  return statement.transactions.map((row) => row.balance);
+}
+```
+
+`StatementFor<"gtbank" | "uba">` is a union that keeps each bank paired with its row shape. Unparameterized `ParseResult` represents all possible parsers. `Transaction` and `Statement` remain available for broad, bank-independent annotations; these annotations intentionally give up bank-specific precision. Keep a bank literal with `const bank = "uba"` (or `as const` on an object property) when you want a precise result; a widened `string` needs runtime narrowing. Unknown names continue to return an `unsupported_bank` failure rather than being rejected by TypeScript. Other account metadata remains optional because it may be absent or unreadable.
 
 ## Exporting
 
@@ -256,11 +319,11 @@ bun run build
 npm pack --dry-run
 ```
 
-`bun run build` uses tsup to generate ESM (`dist/index.js`), CommonJS (`dist/index.cjs`), the browser entry (`dist/browser.js`), their TypeScript declarations, and the private PDF workers. `bun run test` builds the package and runs the tests. Tests cover supported bank layouts, generic text/border extraction, real synthetic PDF loading, rotated and multipage documents, password failures, the non-throwing API, exports, Node.js compatibility through both `import` and `require`, browser bundling, and browser-entry input/result parity.
+`bun run build` uses tsup to generate ESM (`dist/index.js`), CommonJS (`dist/index.cjs`), the browser entry (`dist/browser.js`), their TypeScript declarations, and the private PDF workers. `bun run test` builds the package and runs the tests, including compiling consumers against the published ESM, CommonJS, and browser declarations. `bun run typecheck` also checks bank-specific inference, aliases, automatic detection, unsupported fields, readonly data, and typed JSON snapshots in `tests/type-contract.ts`. Runtime tests cover supported bank layouts, generic text/border extraction, real synthetic PDF loading, rotated and multipage documents, password failures, the non-throwing API, exports, Node.js compatibility through both `import` and `require`, browser bundling, and browser-entry input/result parity.
 
 Five randomized PDF replicas are included under [`tests/fixtures/statements`](./tests/fixtures/statements/README.md), covering 128 pages and 1,740 transactions. They preserve the reference layouts and page counts while replacing customer data with fictional values. Their independent JSON expectations verify every parsed field through both `parse()` and `parseAsync()`. Tests use the included files directly and require none of the original documents. See the fixture README for seeds, hashes, and regeneration with `bun run fixtures:generate`.
 
-Bank algorithms live in `src/parsers`. To add an institution, implement a positioned-text parser, register its ID and aliases in `src/banks.ts`, add it to `BankName` and automatic detection, then add layout/PDF tests and update the supported-bank list.
+Bank algorithms live in `src/parsers`. To add an institution, implement a positioned-text parser, register its ID and aliases in `src/banks.ts`, and add its ID to `BankName` and its returned row shape to `TransactionByParser` in `src/types.ts`. Declare the parser as `PdfStatementParser<"your-bank-id">` so its output is checked against that row contract. Add it to automatic detection, typed dispatch, and worker rehydration, then add layout/PDF/type tests and update the supported-bank list. Runtime and type-level alias resolution share the same alias registry.
 
 ## License
 
